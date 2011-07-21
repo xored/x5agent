@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests
+Bundle-SymbolicName: com.xored.x5agent.core.tests;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.xored.x5agent.core.tests.Activator
+Bundle-Vendor: XORED
+Require-Bundle: org.eclipse.core.runtime,
+ com.xored.x5agent.core;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
