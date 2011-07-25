@@ -29,7 +29,7 @@ public class TestEventProvider extends TestProvider implements IEventProvider,
 		for (int i = 0; !disposed.get(); i++) {
 			synchronized (this) {
 				for (IEventListener l : listeners) {
-					l.handle(new Object());
+					l.handle(new Event(i));
 				}
 			}
 			try {
@@ -57,6 +57,17 @@ public class TestEventProvider extends TestProvider implements IEventProvider,
 	public void removeListener(IEventListener listener) {
 		synchronized (this) {
 			listeners.remove(listener);
+		}
+	}
+
+	private static final class Event {
+		@SuppressWarnings("unused")
+		private final String name = "test event";
+		@SuppressWarnings("unused")
+		private final int number;
+
+		public Event(int number) {
+			this.number = number;
 		}
 	}
 
