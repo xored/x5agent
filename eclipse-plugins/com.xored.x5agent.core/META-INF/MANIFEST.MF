@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core
+Bundle-SymbolicName: com.xored.x5agent.core;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.xored.x5agent.core.Activator
+Bundle-Vendor: XORED
+Require-Bundle: org.eclipse.core.runtime,
+ x5agent;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: com.xored.x5agent.core
