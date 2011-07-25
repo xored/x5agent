@@ -4,3 +4,6 @@ Bundle-Name: x5agent
 Bundle-SymbolicName: x5agent
 Bundle-Version: 1.0.0.qualifier
 Export-Package: com.xored.x5agent.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: lib/gson-1.7.1.jar,
+ .
