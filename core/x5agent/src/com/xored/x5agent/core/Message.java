@@ -4,7 +4,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.UUID;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 final class Message {
@@ -47,7 +50,20 @@ final class Message {
 
 	@Override
 	public String toString() {
-		Gson gson = new Gson();
+		// TODO find a better policy for circular references
+		Gson gson = new GsonBuilder().setExclusionStrategies(
+				new ExclusionStrategy() {
+
+					public boolean shouldSkipClass(Class<?> clazz) {
+						return false;
+					}
+
+					public boolean shouldSkipField(FieldAttributes f) {
+						return f.getDeclaringClass() == f.getDeclaredClass();
+					}
+
+				}).create();
+
 		JsonObject o = (JsonObject) gson.toJsonTree(target);
 		o.addProperty(ID_ATTR, id.toString());
 		o.addProperty(CLIENT_ATTR, X5Agent.Instance.getClientUUID().toString());
