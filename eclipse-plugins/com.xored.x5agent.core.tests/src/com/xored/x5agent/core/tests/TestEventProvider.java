@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.xored.x5agent.core.IEventListener;
-import com.xored.x5agent.core.IEventProvider;
+import com.xored.x5agent.core.EventListener;
+import com.xored.x5agent.core.EventProvider;
 
-public class TestEventProvider extends TestProvider implements IEventProvider,
+public class TestEventProvider extends TestProvider implements EventProvider,
 		Runnable {
 
-	private final List<IEventListener> listeners = new ArrayList<IEventListener>();
+	private final List<EventListener> listeners = new ArrayList<EventListener>();
 	private final AtomicBoolean disposed = new AtomicBoolean();
 
 	@Override
-	public String type() {
+	public String getType() {
 		return getClass().getName();
 	}
 
@@ -28,7 +28,7 @@ public class TestEventProvider extends TestProvider implements IEventProvider,
 	public void run() {
 		for (int i = 0; !disposed.get(); i++) {
 			synchronized (this) {
-				for (IEventListener l : listeners) {
+				for (EventListener l : listeners) {
 					l.handle(new Event(i));
 				}
 			}
@@ -47,14 +47,14 @@ public class TestEventProvider extends TestProvider implements IEventProvider,
 	}
 
 	@Override
-	public void addListener(IEventListener listener) {
+	public void addListener(EventListener listener) {
 		synchronized (this) {
 			listeners.add(listener);
 		}
 	}
 
 	@Override
-	public void removeListener(IEventListener listener) {
+	public void removeListener(EventListener listener) {
 		synchronized (this) {
 			listeners.remove(listener);
 		}

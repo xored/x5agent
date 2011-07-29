@@ -5,25 +5,10 @@
          point="com.xored.x5agent.core.streams">
       <stream>
          <event
-               class="com.xored.x5agent.core.tests.TestEventProvider">
-            <snapshot
-                  class="com.xored.x5agent.core.tests.TestSnapshotProvider">
-               <parameter
-                     name="snapshotParam1"
-                     value="value1">
-               </parameter>
-            </snapshot>
-            <parameter
-                  name="eventParam1"
-                  value="value1">
-            </parameter>
+               class="com.xored.x5agent.core.EclipseLogEventProvider">
          </event>
          <transport
-               class="com.xored.x5agent.core.tests.TestTransportProvider">
-            <parameter
-                  name="transportParam1"
-                  value="value1">
-            </parameter>
+               class="com.xored.x5agent.http.HttpTransport">
          </transport>
       </stream>
    </extension>

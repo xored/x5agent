@@ -1,14 +1,14 @@
 package com.xored.x5agent.core.tests;
 
-import com.xored.x5agent.core.ISnapshotProvider;
+import com.xored.x5agent.core.SnapshotProvider;
 
 public class TestSnapshotProvider extends TestProvider implements
-		ISnapshotProvider {
+		SnapshotProvider {
 
 	private final Snapshot snapshot = new Snapshot();
 
 	@Override
-	public String type() {
+	public String getType() {
 		return getClass().getName();
 	}
 
