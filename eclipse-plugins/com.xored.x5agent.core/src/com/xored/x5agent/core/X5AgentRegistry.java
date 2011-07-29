@@ -12,6 +12,10 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.util.NLS;
 
+import com.xored.x5agent.core.StreamDescriptor.EventDescriptor;
+import com.xored.x5agent.core.StreamDescriptor.SnapshotDescriptor;
+import com.xored.x5agent.core.StreamDescriptor.TransportDescriptor;
+
 public enum X5AgentRegistry {
 	Instance;
 
@@ -27,11 +31,12 @@ public enum X5AgentRegistry {
 
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 
-	public Collection<IStreamDescriber> getStreams() {
-		List<IStreamDescriber> streamDescribers = new ArrayList<IStreamDescriber>();
+	public Collection<Stream> getStreams() {
+		List<Stream> streamDescribers = new ArrayList<Stream>();
 		for (IConfigurationElement e : Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(STREAMS)) {
-			streamDescribers.add(new StreamDescriber(e));
+			XPStreamDescriptor descriptor = new XPStreamDescriptor(e);
+			streamDescribers.add(Stream.create(descriptor));
 		}
 		return streamDescribers;
 	}
@@ -51,39 +56,39 @@ public enum X5AgentRegistry {
 		return properties;
 	}
 
-	private final class StreamDescriber implements IStreamDescriber {
+	private final class XPStreamDescriptor implements StreamDescriptor {
 
 		private final IConfigurationElement element;
-		private IEventDescriber[] events;
-		private ITransportDescriber transport;
+		private EventDescriptor[] events;
+		private XPTransportDescriptor transport;
 
-		private StreamDescriber(IConfigurationElement element) {
+		private XPStreamDescriptor(IConfigurationElement element) {
 			Assert.isNotNull(element);
 			this.element = element;
 		}
 
 		@Override
-		public IEventDescriber[] events() {
+		public EventDescriptor[] events() {
 			if (events == null) {
 				IConfigurationElement[] elements = element
 						.getChildren(EVENT_ELEMENT);
-				List<IEventDescriber> describers = new ArrayList<IEventDescriber>(
+				List<EventDescriptor> describers = new ArrayList<EventDescriptor>(
 						elements.length);
 				for (IConfigurationElement e : elements) {
-					describers.add(new EventDescriber(e));
+					describers.add(new XPEventDescriptor(e));
 				}
-				events = describers.toArray(new IEventDescriber[describers
+				events = describers.toArray(new EventDescriptor[describers
 						.size()]);
 			}
 			return events;
 		}
 
 		@Override
-		public ITransportDescriber transport() {
+		public TransportDescriptor transport() {
 			if (transport == null) {
 				IConfigurationElement[] elements = element
 						.getChildren(TRANSPORT_ELEMENT);
-				transport = new TransportDescriber(elements[0]);
+				transport = new XPTransportDescriptor(elements[0]);
 			}
 			return transport;
 		}
@@ -115,59 +120,59 @@ public enum X5AgentRegistry {
 		}
 	}
 
-	private final class EventDescriber extends Configurable implements
-			IEventDescriber {
+	private final class XPEventDescriptor extends Configurable implements
+			EventDescriptor {
 
-		private ISnapshotDescriber[] snapshots;
+		private XPSnapshotDescriptor[] snapshots;
 
-		private EventDescriber(IConfigurationElement element) {
+		private XPEventDescriptor(IConfigurationElement element) {
 			super(element);
 		}
 
 		@Override
-		public IEventProvider create() {
-			return (IEventProvider) doCreate();
+		public EventProvider create() {
+			return (EventProvider) doCreate();
 		}
 
-		public ISnapshotDescriber[] snapshots() {
+		public XPSnapshotDescriptor[] snapshots() {
 			if (snapshots == null) {
 				IConfigurationElement[] elements = element
 						.getChildren(SNAPSHOT_ELEMENT);
-				List<ISnapshotDescriber> describers = new ArrayList<ISnapshotDescriber>(
+				List<XPSnapshotDescriptor> describers = new ArrayList<XPSnapshotDescriptor>(
 						elements.length);
 				for (IConfigurationElement e : elements) {
-					describers.add(new SnapshotDescriber(e));
+					describers.add(new XPSnapshotDescriptor(e));
 				}
 				snapshots = describers
-						.toArray(new ISnapshotDescriber[describers.size()]);
+						.toArray(new XPSnapshotDescriptor[describers.size()]);
 			}
 			return snapshots;
 		}
 	}
 
-	private final class SnapshotDescriber extends Configurable implements
-			ISnapshotDescriber {
+	private final class XPSnapshotDescriptor extends Configurable implements
+			SnapshotDescriptor {
 
-		private SnapshotDescriber(IConfigurationElement element) {
+		private XPSnapshotDescriptor(IConfigurationElement element) {
 			super(element);
 		}
 
 		@Override
-		public ISnapshotProvider create() {
-			return (ISnapshotProvider) doCreate();
+		public SnapshotProvider create() {
+			return (SnapshotProvider) doCreate();
 		}
 	}
 
-	private final class TransportDescriber extends Configurable implements
-			ITransportDescriber {
+	private final class XPTransportDescriptor extends Configurable implements
+			TransportDescriptor {
 
-		protected TransportDescriber(IConfigurationElement element) {
+		protected XPTransportDescriptor(IConfigurationElement element) {
 			super(element);
 		}
 
 		@Override
-		public ITransport create() {
-			return (ITransport) doCreate();
+		public Transport create() {
+			return (Transport) doCreate();
 		}
 	}
 

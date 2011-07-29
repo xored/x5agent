@@ -9,7 +9,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jface,
  x5agent;bundle-version="1.0.0",
  com.xored.sherlock.core;bundle-version="1.0.0",
- com.xored.sherlock.jface;bundle-version="1.0.0"
+ com.xored.sherlock.jface;bundle-version="1.0.0",
+ com.xored.emfjson;bundle-version="1.0.0",
+ com.google.gson;bundle-version="1.7.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.xored.x5agent.core

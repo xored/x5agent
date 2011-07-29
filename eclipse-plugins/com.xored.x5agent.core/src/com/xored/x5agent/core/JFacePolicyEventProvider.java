@@ -5,12 +5,17 @@ import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.util.ILogger;
 
+import com.google.gson.JsonObject;
+import com.xored.emfjson.Emf2Json;
+import com.xored.sherlock.core.SherlockCore;
+import com.xored.sherlock.core.model.sherlock.EclipseStatus;
+import com.xored.sherlock.core.model.sherlock.SherlockPackage;
 import com.xored.sherlock.jface.SherlockJFacePolicy;
 
 public class JFacePolicyEventProvider extends AbstractEventProvider implements
 		ILogger {
 	@Override
-	public String type() {
+	public String getType() {
 		return "EclipseStatus";
 	}
 
@@ -26,7 +31,10 @@ public class JFacePolicyEventProvider extends AbstractEventProvider implements
 
 	@Override
 	public void log(IStatus status) {
-		notifyListeners(status);
+		EclipseStatus data = SherlockCore.convert(status);
+		Emf2Json converter = new Emf2Json(SherlockPackage.eINSTANCE);
+		JsonObject jsonObject = converter.serialize(data);
+		notifyListeners(jsonObject);
 	}
 
 }

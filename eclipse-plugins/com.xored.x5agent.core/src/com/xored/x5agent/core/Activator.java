@@ -35,16 +35,15 @@ public class Activator extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		Job job = new Job("") {
 
+		Job job = new Job("Starting streams...") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				for (IStreamDescriber d : X5AgentRegistry.Instance.getStreams()) {
-					X5Agent.Instance.run(d);
+				for (Stream stream : X5AgentRegistry.Instance.getStreams()) {
+					X5Agent.Instance.run(stream);
 				}
 				return Status.OK_STATUS;
 			}
-
 		};
 		job.schedule();
 	}

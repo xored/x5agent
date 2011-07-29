@@ -72,7 +72,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":com.xored.x5agent.core.IEventProvider"/>
+                  <meta.attribute kind="java" basedOn=":com.xored.x5agent.core.EventProvider"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -90,7 +90,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":com.xored.x5agent.core.ISnapshotProvider"/>
+                  <meta.attribute kind="java" basedOn=":com.xored.x5agent.core.SnapshotProvider"/>
                </appinfo>
             </annotation>
          </attribute>
@@ -108,7 +108,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":com.xored.x5agent.core.ITransport"/>
+                  <meta.attribute kind="java" basedOn=":com.xored.x5agent.core.Transport"/>
                </appinfo>
             </annotation>
          </attribute>

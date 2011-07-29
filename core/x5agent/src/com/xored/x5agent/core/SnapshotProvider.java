@@ -2,9 +2,9 @@ package com.xored.x5agent.core;
 
 import java.util.Map;
 
-public interface ISnapshotProvider {
+public interface SnapshotProvider {
 
-	String type();
+	String getType();
 
 	void initialize(Map<String, String> parameters);
 

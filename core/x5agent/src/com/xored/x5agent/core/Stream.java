@@ -1,78 +1,77 @@
 package com.xored.x5agent.core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-final class Stream implements IDeliveryCallback {
+import com.xored.x5agent.core.StreamDescriptor.EventDescriptor;
+import com.xored.x5agent.core.StreamDescriptor.SnapshotDescriptor;
 
-	private final IStreamDescriber describer;
-	private List<Event> events = new ArrayList<Event>();
-	private ITransport transport;
+public final class Stream {
 
-	public Stream(IStreamDescriber describer) {
-		for (IEventDescriber ed : describer.events()) {
-			events.add(new Event(ed));
-		}
-		this.describer = describer;
+	private final MessageQueue queue;
+	private final List<Event> events = new ArrayList<Event>();
+
+	public static Stream create(StreamDescriptor descriptor) {
+		return new Stream(descriptor);
 	}
 
-	public void initialize() {
-		ITransportDescriber td = describer.transport();
-		transport = td.create();
-		transport.initialize(td.parameters(), this);
+	public static StreamBuilder build() {
+		throw new UnsupportedOperationException();
+	}
+
+	Stream(StreamDescriptor descriptor) {
+		for (EventDescriptor ed : descriptor.events()) {
+			this.events.add(new Event(ed));
+		}
+		this.queue = new MessageQueue(descriptor.transport());
+	}
+
+	void initialize() {
+		queue.initialize();
 		for (Event e : events) {
 			e.initialize();
 		}
 	}
 
-	public void dispose() {
+	void dispose() {
 		for (Event e : events) {
 			e.dispose();
 		}
-		transport.dispose();
+		queue.dispose();
 	}
 
 	private void handle(Message m) {
-		transport.send(m.toString(), m.id().toString());
+		X5Agent.Instance.getLog().info(m.getId() + " generated");
+		queue.add(m);
 	}
 
-	@Override
-	public void accepted(String id) {
-	}
+	private final class Event implements EventListener {
 
-	@Override
-	public void wontAccept(String id, String reason) {
-	}
+		private final EventDescriptor descriptor;
+		private EventProvider provider;
+		private List<SnapshotProvider> snapshots = new ArrayList<SnapshotProvider>();
 
-	@Override
-	public void retry(String id, String reason) {
-	}
-
-	private final class Event implements IEventListener {
-
-		private final IEventDescriber describer;
-		private IEventProvider provider;
-		private List<ISnapshotProvider> snapshots = new ArrayList<ISnapshotProvider>();
-
-		public Event(IEventDescriber describer) {
-			this.describer = describer;
+		public Event(EventDescriptor descriptor) {
+			this.descriptor = descriptor;
 		}
 
 		public void initialize() {
-			for (ISnapshotDescriber sd : describer.snapshots()) {
-				ISnapshotProvider sp = sd.create();
+			for (SnapshotDescriptor sd : descriptor.snapshots()) {
+				SnapshotProvider sp = sd.create();
 				sp.initialize(sd.parameters());
 				snapshots.add(sp);
 			}
-			provider = describer.create();
-			provider.initialize(describer.parameters());
+			provider = descriptor.create();
+			provider.initialize(descriptor.parameters());
 			provider.addListener(this);
 		}
 
 		public void dispose() {
 			provider.removeListener(this);
-			for (ISnapshotProvider s : snapshots) {
+			for (SnapshotProvider s : snapshots) {
 				s.dispose();
 			}
 			provider.dispose();
@@ -80,17 +79,15 @@ final class Stream implements IDeliveryCallback {
 
 		@Override
 		public void handle(Object e) {
-			List<UUID> references = new ArrayList<UUID>(snapshots.size());
-			for (ISnapshotProvider sp : snapshots) {
-				Message m = Message.create(sp.type(), sp.getSnapshot());
-				references.add(m.id());
+			Map<String, UUID> references = new HashMap<String, UUID>();
+			for (SnapshotProvider sp : snapshots) {
+				Message m = Message.create(sp.getType(), sp.getSnapshot());
+				references.put(sp.getType(), m.getUuid());
 				Stream.this.handle(m);
 			}
-			Message m = Message.create(provider.type(), e,
-					references.toArray(new UUID[references.size()]));
+			Message m = Message.create(provider.getType(), e, references);
 			Stream.this.handle(m);
 		}
 
 	}
-
 }

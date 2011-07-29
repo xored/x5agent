@@ -1,6 +1,6 @@
 package com.xored.x5agent.core;
 
-public interface IDeliveryCallback {
+public interface DeliveryCallback {
 	void accepted(String id);
 
 	void wontAccept(String id, String reason);

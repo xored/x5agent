@@ -3,19 +3,19 @@ package com.xored.x5agent.core;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractEventProvider implements IEventProvider {
+public abstract class AbstractEventProvider implements EventProvider {
 
-	private final List<IEventListener> listeners = new ArrayList<IEventListener>();
+	private final List<EventListener> listeners = new ArrayList<EventListener>();
 
 	@Override
-	public void addListener(IEventListener listener) {
+	public void addListener(EventListener listener) {
 		synchronized (this) {
 			listeners.add(listener);
 		}
 	}
 
 	@Override
-	public void removeListener(IEventListener listener) {
+	public void removeListener(EventListener listener) {
 		synchronized (this) {
 			listeners.remove(listener);
 		}
@@ -23,7 +23,7 @@ public abstract class AbstractEventProvider implements IEventProvider {
 
 	protected void notifyListeners(Object o) {
 		synchronized (this) {
-			for (IEventListener l : listeners) {
+			for (EventListener l : listeners) {
 				l.handle(o);
 			}
 		}

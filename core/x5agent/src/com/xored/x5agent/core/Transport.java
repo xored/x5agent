@@ -2,13 +2,13 @@ package com.xored.x5agent.core;
 
 import java.util.Map;
 
-public interface ITransport {
+public interface Transport {
 	/**
 	 * Will be called after object’s construction, but before any actual usage
 	 * of the object.Implementations should store the callback and use it to
 	 * report delivery status back to X5 agent.
 	 */
-	void initialize(Map<String, String> parameters, IDeliveryCallback callback);
+	void initialize(Map<String, String> parameters, DeliveryCallback callback);
 
 	/**
 	 * @param message
@@ -16,7 +16,7 @@ public interface ITransport {
 	 * @param id
 	 *            Id may be used to report back message delivery status.
 	 */
-	void send(String message, String id);
+	void send(Message[] messages);
 
 	/**
 	 * When X5 does not need transport object any longer, it calls dispose on

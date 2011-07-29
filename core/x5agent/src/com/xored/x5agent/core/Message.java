@@ -2,77 +2,71 @@ package com.xored.x5agent.core;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-final class Message {
+public final class Message {
 
-	public static Message create(String type, Object target, UUID[] references) {
-		return new Message(type, target, references);
+	public static Message create(String type, Object event,
+			Map<String, UUID> references) {
+		return new Message(type, event, references);
 	}
 
-	public static Message create(String type, Object target) {
-		return new Message(type, target, null);
+	public static Message create(String type, Object event) {
+		return new Message(type, event, null);
 	}
-
-	private static final String ID_ATTR = "id";
-	private static final String CLIENT_ATTR = "client";
-	private static final String CLIENT_APP_ATTR = "client-app";
-	private static final String GENERATED_ATTR = "generated";
-	private static final String TYPE_ATTR = "type";
-	private static final String REFS_ATTR = "refs";
 
 	private static final DateFormat dateFormat = new SimpleDateFormat(
-			"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+			"yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
 
 	private final UUID id;
 	private final long timestamp;
 	private final String type;
-	private final UUID[] references;
-	private final Object target;
+	private final Map<String, UUID> references;
+	private final Object event;
 
-	public Message(String type, Object target, UUID[] references) {
+	Message(String type, Object event, Map<String, UUID> references) {
 		this.id = UUID.randomUUID();
 		this.timestamp = System.currentTimeMillis();
 		this.type = type;
-		this.target = target;
+		this.event = event;
 		this.references = references;
 	}
 
-	public UUID id() {
+	public String getId() {
+		return id.toString();
+	}
+
+	UUID getUuid() {
 		return id;
+	}
+
+	public String getBody() {
+		Gson gson = new Gson();
+		Map<String, Object> message = new HashMap<String, Object>();
+		message.put("id", getId());
+		message.put("clientapp", X5Agent.Instance.getClientUUID().toString());
+		message.put("client", X5Agent.Instance.getClientApp());
+		message.put("generated", dateFormat.format(timestamp));
+		message.put("schema", type);
+		if (event instanceof JsonObject) {
+			message.put("body", event);
+		}
+		if (references != null && !references.isEmpty()) {
+			message.put("refs", gson.toJsonTree(references));
+		}
+		String body = gson.toJson(message);
+		X5Agent.Instance.getLog().info(body);
+		return body;
 	}
 
 	@Override
 	public String toString() {
-		// TODO find a better policy for circular references
-		Gson gson = new GsonBuilder().setExclusionStrategies(
-				new ExclusionStrategy() {
-
-					public boolean shouldSkipClass(Class<?> clazz) {
-						return false;
-					}
-
-					public boolean shouldSkipField(FieldAttributes f) {
-						return f.getDeclaringClass() == f.getDeclaredClass();
-					}
-
-				}).create();
-
-		JsonObject o = (JsonObject) gson.toJsonTree(target);
-		o.addProperty(ID_ATTR, id.toString());
-		o.addProperty(CLIENT_ATTR, X5Agent.Instance.getClientUUID().toString());
-		o.addProperty(CLIENT_APP_ATTR, X5Agent.Instance.getClientApp());
-		o.addProperty(GENERATED_ATTR, dateFormat.format(timestamp));
-		o.addProperty(TYPE_ATTR, type);
-		if (references != null && references.length > 0)
-			o.add(REFS_ATTR, gson.toJsonTree(references));
-		return o.toString();
+		return getBody();
 	}
 
 }
