@@ -13,6 +13,7 @@ public final class Stream {
 
 	private final MessageQueue queue;
 	private final List<Event> events = new ArrayList<Event>();
+	private final Map<String, Message> snapshots = new HashMap<String, Message>();
 
 	public static Stream create(StreamDescriptor descriptor) {
 		return new Stream(descriptor);
@@ -44,7 +45,6 @@ public final class Stream {
 	}
 
 	private void handle(Message m) {
-		X5Agent.Instance.getLog().info(m.getId() + " generated");
 		queue.add(m);
 	}
 
@@ -52,26 +52,26 @@ public final class Stream {
 
 		private final EventDescriptor descriptor;
 		private EventProvider provider;
-		private List<SnapshotProvider> snapshots = new ArrayList<SnapshotProvider>();
+		private List<SnapshotProvider> snapshotProviders = new ArrayList<SnapshotProvider>();
 
-		public Event(EventDescriptor descriptor) {
+		Event(EventDescriptor descriptor) {
 			this.descriptor = descriptor;
 		}
 
-		public void initialize() {
+		void initialize() {
 			for (SnapshotDescriptor sd : descriptor.snapshots()) {
 				SnapshotProvider sp = sd.create();
 				sp.initialize(sd.parameters());
-				snapshots.add(sp);
+				snapshotProviders.add(sp);
 			}
 			provider = descriptor.create();
 			provider.initialize(descriptor.parameters());
 			provider.addListener(this);
 		}
 
-		public void dispose() {
+		void dispose() {
 			provider.removeListener(this);
-			for (SnapshotProvider s : snapshots) {
+			for (SnapshotProvider s : snapshotProviders) {
 				s.dispose();
 			}
 			provider.dispose();
@@ -79,11 +79,27 @@ public final class Stream {
 
 		@Override
 		public void handle(Object e) {
+			if (e == null) {
+				return;
+			}
 			Map<String, UUID> references = new HashMap<String, UUID>();
-			for (SnapshotProvider sp : snapshots) {
-				Message m = Message.create(sp.getType(), sp.getSnapshot());
+			for (SnapshotProvider sp : snapshotProviders) {
+				Object s = sp.getSnapshot();
+				if (s == null) {
+					continue;
+				}
+				Message m = snapshots.get(sp.getType());
+				if (m != null) {
+					if (!s.equals(m.getObject())) {
+						m = null;
+					}
+				}
+				if (m == null) {
+					m = Message.create(sp.getType(), s);
+					Stream.this.handle(m);
+					snapshots.put(sp.getType(), m);
+				}
 				references.put(sp.getType(), m.getUuid());
-				Stream.this.handle(m);
 			}
 			Message m = Message.create(provider.getType(), e, references);
 			Stream.this.handle(m);
