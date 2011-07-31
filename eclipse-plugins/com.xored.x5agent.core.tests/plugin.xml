@@ -6,6 +6,15 @@
       <stream>
          <event
                class="com.xored.x5agent.core.EclipseLogEventProvider">
+            <snapshot
+                  class="com.xored.x5agent.core.JavaInfoSnapshotProvider">
+            </snapshot>
+            <snapshot
+                  class="com.xored.x5agent.core.EclipseInfoSnapshotProvider">
+            </snapshot>
+            <snapshot
+                  class="com.xored.x5agent.core.SystemInfoSnapshotProvider">
+            </snapshot>
          </event>
          <transport
                class="com.xored.x5agent.http.HttpTransport">
