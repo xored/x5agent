@@ -7,11 +7,10 @@ Bundle-Activator: com.xored.x5agent.core.Activator
 Bundle-Vendor: XORED
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jface,
- x5agent;bundle-version="1.0.0",
  com.xored.sherlock.core;bundle-version="1.0.0",
  com.xored.sherlock.jface;bundle-version="1.0.0",
- com.xored.emfjson;bundle-version="1.0.0",
- com.google.gson;bundle-version="1.7.1"
+ x5agent;bundle-version="1.0.0";visibility:=reexport,
+ x5agent.http;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.xored.x5agent.core

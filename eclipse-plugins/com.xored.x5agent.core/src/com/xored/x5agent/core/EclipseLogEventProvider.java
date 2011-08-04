@@ -17,7 +17,7 @@ public class EclipseLogEventProvider extends StatusEventProvider implements
 
 	@Override
 	public void logging(IStatus status, String plugin) {
-		notifyListeners(toJson(status));
+		notifyListeners(SherlockCore.convert(status));
 	}
 
 	@Override

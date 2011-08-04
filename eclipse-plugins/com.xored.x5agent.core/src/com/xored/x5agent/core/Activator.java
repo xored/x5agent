@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.emf.ecore.EPackage;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -35,13 +36,18 @@ public class Activator extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-
-		Job job = new Job("Starting streams...") {
+		Job job = new Job("Starting X5 Agent...") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				for (Stream stream : X5AgentRegistry.Instance.getStreams()) {
-					X5Agent.Instance.run(stream);
-				}
+				X5Agent.Instance
+						.initialize(
+								new EPackage[] {
+										EPackage.Registry.INSTANCE
+												.getEPackage("http://xored.com/x5/1.0"),
+										EPackage.Registry.INSTANCE
+												.getEPackage("http://xored.com/sherlock/1.0") },
+								X5AgentRegistry.Instance.getStreams());
+
 				return Status.OK_STATUS;
 			}
 		};
@@ -71,21 +77,25 @@ public class Activator extends Plugin {
 	}
 
 	public static void log(CoreException e) {
-		getDefault().getLog().log(e.getStatus());
+		e.printStackTrace();
+		// getDefault().getLog().log(e.getStatus());
 	}
 
 	public static void logError(String msg) {
-		getDefault().getLog().log(
-				new Status(IStatus.ERROR, PLUGIN_ID, msg, null));
+		// getDefault().getLog().log(
+		// new Status(IStatus.ERROR, PLUGIN_ID, msg, null));
 	}
 
 	public static void logError(Throwable t) {
-		getDefault().getLog().log(
-				new Status(IStatus.ERROR, PLUGIN_ID, t.getMessage(), t));
+		t.printStackTrace();
+		// getDefault().getLog().log(
+		// new Status(IStatus.ERROR, PLUGIN_ID, t.getMessage(), t));
 	}
 
 	public static void logError(String msg, Throwable t) {
-		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, msg, t));
+		t.printStackTrace();
+		// getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, msg,
+		// t));
 	}
 
 }

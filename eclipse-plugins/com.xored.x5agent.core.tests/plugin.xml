@@ -18,6 +18,10 @@
          </event>
          <transport
                class="com.xored.x5agent.http.HttpTransport">
+            <parameter
+                  name="url"
+                  value="http://localhost:8080/api2">
+            </parameter>
          </transport>
       </stream>
    </extension>

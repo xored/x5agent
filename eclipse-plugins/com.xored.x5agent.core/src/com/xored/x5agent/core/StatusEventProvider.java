@@ -6,12 +6,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.xored.x5agent.core.AbstractX5EventProvider;
 
-public abstract class StatusEventProvider extends AbstractEventProvider {
+public abstract class StatusEventProvider extends AbstractX5EventProvider {
 
 	@Override
-	public String getType() {
-		return "sherlok.eclipse_status";
+	public String getSchema() {
+		return "sherlock.eclipse_status";
 	}
 
 	protected JsonElement toJson(IStatus status) {

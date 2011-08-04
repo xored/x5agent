@@ -1,7 +1,6 @@
 package com.xored.x5agent.core;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +11,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.util.NLS;
 
-import com.xored.x5agent.core.StreamDescriptor.EventDescriptor;
-import com.xored.x5agent.core.StreamDescriptor.SnapshotDescriptor;
-import com.xored.x5agent.core.StreamDescriptor.TransportDescriptor;
+import com.xored.x5agent.core.X5StreamDescriptor.X5EventDescriptor;
+import com.xored.x5agent.core.X5StreamDescriptor.X5SnapshotDescriptor;
+import com.xored.x5agent.core.X5StreamDescriptor.X5TransportDescriptor;
 
 public enum X5AgentRegistry {
 	Instance;
@@ -31,14 +30,14 @@ public enum X5AgentRegistry {
 
 	private static final String CLASS_ATTR = "class"; //$NON-NLS-1$
 
-	public Collection<Stream> getStreams() {
-		List<Stream> streamDescribers = new ArrayList<Stream>();
+	public X5Stream[] getStreams() {
+		List<X5Stream> streamDescribers = new ArrayList<X5Stream>();
 		for (IConfigurationElement e : Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(STREAMS)) {
 			XPStreamDescriptor descriptor = new XPStreamDescriptor(e);
-			streamDescribers.add(Stream.create(descriptor));
+			streamDescribers.add(X5Stream.create(descriptor));
 		}
-		return streamDescribers;
+		return streamDescribers.toArray(new X5Stream[streamDescribers.size()]);
 	}
 
 	private Map<String, String> getProperties(IConfigurationElement element) {
@@ -56,10 +55,10 @@ public enum X5AgentRegistry {
 		return properties;
 	}
 
-	private final class XPStreamDescriptor implements StreamDescriptor {
+	private final class XPStreamDescriptor implements X5StreamDescriptor {
 
 		private final IConfigurationElement element;
-		private EventDescriptor[] events;
+		private X5EventDescriptor[] events;
 		private XPTransportDescriptor transport;
 
 		private XPStreamDescriptor(IConfigurationElement element) {
@@ -68,23 +67,23 @@ public enum X5AgentRegistry {
 		}
 
 		@Override
-		public EventDescriptor[] events() {
+		public X5EventDescriptor[] events() {
 			if (events == null) {
 				IConfigurationElement[] elements = element
 						.getChildren(EVENT_ELEMENT);
-				List<EventDescriptor> describers = new ArrayList<EventDescriptor>(
+				List<X5EventDescriptor> describers = new ArrayList<X5EventDescriptor>(
 						elements.length);
 				for (IConfigurationElement e : elements) {
 					describers.add(new XPEventDescriptor(e));
 				}
-				events = describers.toArray(new EventDescriptor[describers
+				events = describers.toArray(new X5EventDescriptor[describers
 						.size()]);
 			}
 			return events;
 		}
 
 		@Override
-		public TransportDescriptor transport() {
+		public X5TransportDescriptor transport() {
 			if (transport == null) {
 				IConfigurationElement[] elements = element
 						.getChildren(TRANSPORT_ELEMENT);
@@ -121,7 +120,7 @@ public enum X5AgentRegistry {
 	}
 
 	private final class XPEventDescriptor extends Configurable implements
-			EventDescriptor {
+			X5EventDescriptor {
 
 		private XPSnapshotDescriptor[] snapshots;
 
@@ -130,8 +129,8 @@ public enum X5AgentRegistry {
 		}
 
 		@Override
-		public EventProvider create() {
-			return (EventProvider) doCreate();
+		public X5EventProvider create() {
+			return (X5EventProvider) doCreate();
 		}
 
 		public XPSnapshotDescriptor[] snapshots() {
@@ -151,28 +150,28 @@ public enum X5AgentRegistry {
 	}
 
 	private final class XPSnapshotDescriptor extends Configurable implements
-			SnapshotDescriptor {
+			X5SnapshotDescriptor {
 
 		private XPSnapshotDescriptor(IConfigurationElement element) {
 			super(element);
 		}
 
 		@Override
-		public SnapshotProvider create() {
-			return (SnapshotProvider) doCreate();
+		public X5SnapshotProvider create() {
+			return (X5SnapshotProvider) doCreate();
 		}
 	}
 
 	private final class XPTransportDescriptor extends Configurable implements
-			TransportDescriptor {
+			X5TransportDescriptor {
 
 		protected XPTransportDescriptor(IConfigurationElement element) {
 			super(element);
 		}
 
 		@Override
-		public Transport create() {
-			return (Transport) doCreate();
+		public X5Transport create() {
+			return (X5Transport) doCreate();
 		}
 	}
 

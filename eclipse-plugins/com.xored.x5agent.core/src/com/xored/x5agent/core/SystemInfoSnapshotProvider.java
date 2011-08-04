@@ -2,16 +2,17 @@ package com.xored.x5agent.core;
 
 import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.xored.sherlock.core.info.SystemInfoProvider;
+import org.eclipse.emf.ecore.EObject;
 
-public class SystemInfoSnapshotProvider implements SnapshotProvider {
+import com.xored.sherlock.core.info.Info;
+import com.xored.x5agent.core.X5SnapshotProvider;
 
-	private JsonObject snapshot;
+public class SystemInfoSnapshotProvider implements X5SnapshotProvider {
+
+	private EObject snapshot;
 
 	@Override
-	public String getType() {
+	public String getSchema() {
 		return "system_info";
 	}
 
@@ -20,16 +21,19 @@ public class SystemInfoSnapshotProvider implements SnapshotProvider {
 	}
 
 	@Override
-	public Object getSnapshot() {
+	public EObject getSnapshot() {
 		if (snapshot == null) {
-			snapshot = new JsonObject();
-			Gson gson = new Gson();
-			snapshot.addProperty("osName", SystemInfoProvider.getOSName());
-			snapshot.addProperty("osVersion", SystemInfoProvider.getOSVersion());
-			snapshot.addProperty("osArch", SystemInfoProvider.getOSArch());
-			snapshot.addProperty("username", SystemInfoProvider.getUsername());
-			snapshot.add("variables",
-					gson.toJsonTree(SystemInfoProvider.getVariables()));
+			snapshot = Info.getSystem();
+			// snapshot = new JsonObject();
+			// Gson gson = new Gson();
+			// snapshot.addProperty("osName", SystemInfoProvider.getOSName());
+			// snapshot.addProperty("osVersion",
+			// SystemInfoProvider.getOSVersion());
+			// snapshot.addProperty("osArch", SystemInfoProvider.getOSArch());
+			// snapshot.addProperty("username",
+			// SystemInfoProvider.getUsername());
+			// snapshot.add("variables",
+			// gson.toJsonTree(SystemInfoProvider.getVariables()));
 		}
 		return snapshot;
 	}
