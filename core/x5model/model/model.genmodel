@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/x5model/src"
+    editDirectory="/x5agent.edit/gen-src" modelPluginID="x5model" modelName="Model"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0" copyrightFields="false"
+    providerRootExtendsClass="">
+  <foreignModel>model.ecore</foreignModel>
+  <genPackages prefix="X5" basePackage="com.xored.x5agent" disposableProviderFactory="true"
+      ecorePackage="model.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="model.ecore#//DeliveryStatus">
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//DeliveryStatus/Accepted"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//DeliveryStatus/WontAccept"/>
+      <genEnumLiterals ecoreEnumLiteral="model.ecore#//DeliveryStatus/Retry"/>
+    </genEnums>
+    <genClasses image="false" ecoreClass="model.ecore#//X5Request"/>
+    <genClasses image="false" ecoreClass="model.ecore#//X5Response"/>
+    <genClasses ecoreClass="model.ecore#//X5Fact">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//X5Fact/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//X5Fact/clientapp"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//X5Fact/client"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//X5Fact/timestamp"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//X5Fact/schema"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference model.ecore#//X5Fact/body"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference model.ecore#//X5Fact/references"/>
+    </genClasses>
+    <genClasses ecoreClass="model.ecore#//EStringToEStringMapEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//EStringToEStringMapEntry/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//EStringToEStringMapEntry/value"/>
+    </genClasses>
+    <genClasses ecoreClass="model.ecore#//X5FactResponse">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute model.ecore#//X5FactResponse/status"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

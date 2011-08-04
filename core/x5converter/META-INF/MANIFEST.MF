@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: x5converter
+Bundle-SymbolicName: x5converter
+Bundle-Version: 1.0.0.qualifier
+Export-Package: com.xored.x5agent.http
+Require-Bundle: org.eclipse.emf.ecore;bundle-version="2.6.1",
+ com.google.gson;bundle-version="1.7.1",
+ com.xored.sherlock.model;bundle-version="1.0.0",
+ x5model;bundle-version="1.0.0",
+ com.xored.emfjson;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
