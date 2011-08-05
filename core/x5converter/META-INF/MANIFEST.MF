@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: x5converter
 Bundle-SymbolicName: x5converter
 Bundle-Version: 1.0.0.qualifier
-Export-Package: com.xored.x5agent.http
+Export-Package: com.xored.x5server.converter
 Require-Bundle: org.eclipse.emf.ecore;bundle-version="2.6.1",
  com.google.gson;bundle-version="1.7.1",
  com.xored.sherlock.model;bundle-version="1.0.0",

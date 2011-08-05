@@ -1,4 +1,4 @@
-package com.xored.x5agent.http;
+package com.xored.x5server.converter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -11,9 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.xored.emfjson.Emf2Json;
 import com.xored.sherlock.core.model.sherlock.EclipseFeature;
 import com.xored.sherlock.core.model.sherlock.EclipseInfo;
 import com.xored.sherlock.core.model.sherlock.EclipsePlugin;
@@ -22,27 +20,15 @@ import com.xored.sherlock.core.model.sherlock.EclipseStatus;
 import com.xored.sherlock.core.model.sherlock.JavaException;
 import com.xored.sherlock.core.model.sherlock.JavaInfo;
 import com.xored.sherlock.core.model.sherlock.JavaStackTraceEntry;
-import com.xored.sherlock.core.model.sherlock.SherlockPackage;
 import com.xored.sherlock.core.model.sherlock.SystemInfo;
 import com.xored.x5agent.model.X5Fact;
-import com.xored.x5agent.model.X5Package;
 
-public class X5FactToJsonConverter {
+public class X5FactToOldJsonFormatConverter {
 	private final DateFormat dateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
 
-	public String convert(String json) {
-		Emf2Json converter = new Emf2Json(X5Package.eINSTANCE,
-				SherlockPackage.eINSTANCE);
-		JsonParser p = new JsonParser();
-		JsonElement e = p.parse(json);
-		if (e instanceof JsonObject) {
-			EObject eObject = converter.deserialize((JsonObject) e);
-			if (eObject instanceof X5Fact) {
-				return toJson((X5Fact) eObject).toString();
-			}
-		}
-		throw new IllegalArgumentException("unexpected format");
+	public String convert(X5Fact fact) {
+		return toJson(fact).toString();
 	}
 
 	private JsonObject toJson(X5Fact fact) {
