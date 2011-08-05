@@ -16,13 +16,13 @@ class X5MessageQueue {
 
 	// TODO store fact queue in file system
 
-	private final KeepAliveTransport transport;
+	private final Transport transport;
 	private final Set<X5Fact> facts = new HashSet<X5Fact>();
 	private final ExecutorService pool = Executors.newFixedThreadPool(3);
 	private final AtomicBoolean disposed = new AtomicBoolean(false);
 
 	X5MessageQueue(X5TransportDescriptor descriptor) {
-		this.transport = new KeepAliveTransport(descriptor);
+		this.transport = new Transport(descriptor);
 	}
 
 	long getSendInterval() {
@@ -88,12 +88,12 @@ class X5MessageQueue {
 		}
 	}
 
-	final class KeepAliveTransport {
+	private final class Transport {
 
 		private final X5TransportDescriptor descriptor;
 		private X5Transport transport;
 
-		private KeepAliveTransport(X5TransportDescriptor descriptor) {
+		private Transport(X5TransportDescriptor descriptor) {
 			this.descriptor = descriptor;
 		}
 
