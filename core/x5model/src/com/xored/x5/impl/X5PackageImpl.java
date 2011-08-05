@@ -4,15 +4,15 @@
  *
  * $Id$
  */
-package com.xored.x5agent.model.impl;
+package com.xored.x5.impl;
 
-import com.xored.x5agent.model.DeliveryStatus;
-import com.xored.x5agent.model.X5Fact;
-import com.xored.x5agent.model.X5FactResponse;
-import com.xored.x5agent.model.X5Factory;
-import com.xored.x5agent.model.X5Package;
-import com.xored.x5agent.model.X5Request;
-import com.xored.x5agent.model.X5Response;
+import com.xored.x5.DeliveryStatus;
+import com.xored.x5.X5Fact;
+import com.xored.x5.X5FactResponse;
+import com.xored.x5.X5Factory;
+import com.xored.x5.X5Package;
+import com.xored.x5.X5Request;
+import com.xored.x5.X5Response;
 
 import java.util.Map;
 
@@ -84,7 +84,7 @@ public class X5PackageImpl extends EPackageImpl implements X5Package {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
-	 * @see com.xored.x5agent.model.X5Package#eNS_URI
+	 * @see com.xored.x5.X5Package#eNS_URI
 	 * @see #init()
 	 * @generated
 	 */
@@ -362,9 +362,9 @@ public class X5PackageImpl extends EPackageImpl implements X5Package {
 		x5FactResponseEClass.getESuperTypes().add(this.getX5Response());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(x5RequestEClass, X5Request.class, "X5Request", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(x5RequestEClass, X5Request.class, "X5Request", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(x5ResponseEClass, X5Response.class, "X5Response", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(x5ResponseEClass, X5Response.class, "X5Response", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(x5FactEClass, X5Fact.class, "X5Fact", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getX5Fact_Id(), ecorePackage.getEString(), "id", null, 0, 1, X5Fact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

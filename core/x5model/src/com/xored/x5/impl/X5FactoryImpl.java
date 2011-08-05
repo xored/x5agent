@@ -4,9 +4,9 @@
  *
  * $Id$
  */
-package com.xored.x5agent.model.impl;
+package com.xored.x5.impl;
 
-import com.xored.x5agent.model.*;
+import com.xored.x5.*;
 
 import java.util.Map;
 
@@ -63,6 +63,8 @@ public class X5FactoryImpl extends EFactoryImpl implements X5Factory {
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
+			case X5Package.X5_REQUEST: return createX5Request();
+			case X5Package.X5_RESPONSE: return createX5Response();
 			case X5Package.X5_FACT: return createX5Fact();
 			case X5Package.ESTRING_TO_ESTRING_MAP_ENTRY: return (EObject)createEStringToEStringMapEntry();
 			case X5Package.X5_FACT_RESPONSE: return createX5FactResponse();
@@ -99,6 +101,26 @@ public class X5FactoryImpl extends EFactoryImpl implements X5Factory {
 			default:
 				throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public X5Request createX5Request() {
+		X5RequestImpl x5Request = new X5RequestImpl();
+		return x5Request;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public X5Response createX5Response() {
+		X5ResponseImpl x5Response = new X5ResponseImpl();
+		return x5Response;
 	}
 
 	/**

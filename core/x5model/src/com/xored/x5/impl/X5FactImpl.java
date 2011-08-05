@@ -4,10 +4,10 @@
  *
  * $Id$
  */
-package com.xored.x5agent.model.impl;
+package com.xored.x5.impl;
 
-import com.xored.x5agent.model.X5Fact;
-import com.xored.x5agent.model.X5Package;
+import com.xored.x5.X5Fact;
+import com.xored.x5.X5Package;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -32,19 +31,19 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.xored.x5agent.model.impl.X5FactImpl#getId <em>Id</em>}</li>
- *   <li>{@link com.xored.x5agent.model.impl.X5FactImpl#getClientapp <em>Clientapp</em>}</li>
- *   <li>{@link com.xored.x5agent.model.impl.X5FactImpl#getClient <em>Client</em>}</li>
- *   <li>{@link com.xored.x5agent.model.impl.X5FactImpl#getTimestamp <em>Timestamp</em>}</li>
- *   <li>{@link com.xored.x5agent.model.impl.X5FactImpl#getSchema <em>Schema</em>}</li>
- *   <li>{@link com.xored.x5agent.model.impl.X5FactImpl#getBody <em>Body</em>}</li>
- *   <li>{@link com.xored.x5agent.model.impl.X5FactImpl#getReferences <em>References</em>}</li>
+ *   <li>{@link com.xored.x5.impl.X5FactImpl#getId <em>Id</em>}</li>
+ *   <li>{@link com.xored.x5.impl.X5FactImpl#getClientapp <em>Clientapp</em>}</li>
+ *   <li>{@link com.xored.x5.impl.X5FactImpl#getClient <em>Client</em>}</li>
+ *   <li>{@link com.xored.x5.impl.X5FactImpl#getTimestamp <em>Timestamp</em>}</li>
+ *   <li>{@link com.xored.x5.impl.X5FactImpl#getSchema <em>Schema</em>}</li>
+ *   <li>{@link com.xored.x5.impl.X5FactImpl#getBody <em>Body</em>}</li>
+ *   <li>{@link com.xored.x5.impl.X5FactImpl#getReferences <em>References</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class X5FactImpl extends EObjectImpl implements X5Fact {
+public class X5FactImpl extends X5RequestImpl implements X5Fact {
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->

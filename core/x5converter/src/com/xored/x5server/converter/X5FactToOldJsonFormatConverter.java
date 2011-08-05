@@ -21,7 +21,7 @@ import com.xored.sherlock.core.model.sherlock.JavaException;
 import com.xored.sherlock.core.model.sherlock.JavaInfo;
 import com.xored.sherlock.core.model.sherlock.JavaStackTraceEntry;
 import com.xored.sherlock.core.model.sherlock.SystemInfo;
-import com.xored.x5agent.model.X5Fact;
+import com.xored.x5.X5Fact;
 
 public class X5FactToOldJsonFormatConverter {
 	private final DateFormat dateFormat = new SimpleDateFormat(

@@ -1,10 +1,10 @@
 package com.xored.x5server.core;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl;
 
@@ -13,17 +13,35 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.xored.emfjson.Emf2Json;
 import com.xored.sherlock.core.model.sherlock.SherlockPackage;
-import com.xored.x5agent.model.X5Package;
+import com.xored.x5.X5Package;
 
 public abstract class AbstractX5Server implements X5Server {
 
-	// TODO read from configuration
-	private static final EPackage[] packages = new EPackage[] {
-			X5Package.eINSTANCE, SherlockPackage.eINSTANCE };
+	@Override
+	public String eObjectToJson(EObject eObject) {
+		Emf2Json emf2Json = new Emf2Json(X5Package.eINSTANCE,
+				SherlockPackage.eINSTANCE);
+		JsonObject json = emf2Json.serialize(eObject);
+		return json.toString();
+	}
 
 	@Override
-	public EObject eObjectFromJson(String json) {
-		Emf2Json emf2Json = new Emf2Json(packages);
+	public byte[] eObjectToByteArray(EObject eObject) {
+		Resource r = new BinaryResourceImpl();
+		r.getContents().add(eObject);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			r.save(out, null);
+			return out.toByteArray();
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to serialize", e);
+		}
+	}
+
+	@Override
+	public EObject jsonToEObject(String json) {
+		Emf2Json emf2Json = new Emf2Json(X5Package.eINSTANCE,
+				SherlockPackage.eINSTANCE);
 		JsonParser p = new JsonParser();
 		JsonElement e = p.parse(json);
 		if (e instanceof JsonObject) {
@@ -34,7 +52,7 @@ public abstract class AbstractX5Server implements X5Server {
 	}
 
 	@Override
-	public EObject eObjectFromBytes(byte[] bytes) {
+	public EObject byteArrayToEObject(byte[] bytes) {
 		Resource r = new BinaryResourceImpl();
 		ByteArrayInputStream bin = new ByteArrayInputStream(bytes);
 		try {
@@ -44,5 +62,17 @@ public abstract class AbstractX5Server implements X5Server {
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to deserialize", e);
 		}
+	}
+
+	@Override
+	public void logInfo(String message) {
+		// TODO use logger
+		System.out.println(message);
+	}
+
+	@Override
+	public void logError(Throwable t) {
+		// TODO use logger
+		t.printStackTrace();
 	}
 }

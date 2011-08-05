@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
@@ -13,14 +14,16 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.eclipse.emf.ecore.EObject;
 
+import com.xored.x5.DeliveryStatus;
+import com.xored.x5.X5FactResponse;
+import com.xored.x5.X5Factory;
+import com.xored.x5.X5Request;
+import com.xored.x5.X5Response;
 import com.xored.x5agent.core.X5Agent;
 import com.xored.x5agent.core.X5Transport;
-import com.xored.x5agent.model.DeliveryStatus;
-import com.xored.x5agent.model.X5FactResponse;
-import com.xored.x5agent.model.X5Factory;
-import com.xored.x5agent.model.X5Request;
-import com.xored.x5agent.model.X5Response;
 
 public class HttpTransport implements X5Transport {
 
@@ -46,19 +49,27 @@ public class HttpTransport implements X5Transport {
 					+ "utf-8");
 			post.setEntity(entity);
 			HttpResponse response = client.execute(post);
-
-			X5FactResponse factResponse = X5Factory.eINSTANCE
-					.createX5FactResponse();
-			StatusLine line = response.getStatusLine();
-			int statusCode = line.getStatusCode();
-			if (statusCode == HttpStatus.SC_CREATED) {
-				factResponse.setStatus(DeliveryStatus.ACCEPTED);
-			} else if (statusCode >= 500 && statusCode < 600) {
-				factResponse.setStatus(DeliveryStatus.RETRY);
+			HttpEntity responseEntity = response.getEntity();
+			if (responseEntity == null) {
+				X5FactResponse factResponse = X5Factory.eINSTANCE
+						.createX5FactResponse();
+				StatusLine line = response.getStatusLine();
+				int statusCode = line.getStatusCode();
+				if (statusCode == HttpStatus.SC_CREATED) {
+					factResponse.setStatus(DeliveryStatus.ACCEPTED);
+				} else if (statusCode >= 500 && statusCode < 600) {
+					factResponse.setStatus(DeliveryStatus.RETRY);
+				} else {
+					factResponse.setStatus(DeliveryStatus.WONT_ACCEPT);
+				}
 			} else {
-				factResponse.setStatus(DeliveryStatus.WONT_ACCEPT);
+				String json = EntityUtils.toString(responseEntity);
+				EObject eObject = agent.jsonToEObject(json);
+				if (eObject instanceof X5Response) {
+					return (X5Response) eObject;
+				}
 			}
-			return factResponse;
+			throw new RuntimeException("Unexpected format");
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		} catch (ClientProtocolException e) {

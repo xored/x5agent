@@ -4,9 +4,9 @@
  *
  * $Id$
  */
-package com.xored.x5agent.model.impl;
+package com.xored.x5.impl;
 
-import com.xored.x5agent.model.X5Package;
+import com.xored.x5.X5Package;
 
 import org.eclipse.emf.common.notify.Notification;
 
@@ -26,8 +26,8 @@ import org.eclipse.emf.ecore.impl.EObjectImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.xored.x5agent.model.impl.EStringToEStringMapEntryImpl#getTypedKey <em>Key</em>}</li>
- *   <li>{@link com.xored.x5agent.model.impl.EStringToEStringMapEntryImpl#getTypedValue <em>Value</em>}</li>
+ *   <li>{@link com.xored.x5.impl.EStringToEStringMapEntryImpl#getTypedKey <em>Key</em>}</li>
+ *   <li>{@link com.xored.x5.impl.EStringToEStringMapEntryImpl#getTypedValue <em>Value</em>}</li>
  * </ul>
  * </p>
  *

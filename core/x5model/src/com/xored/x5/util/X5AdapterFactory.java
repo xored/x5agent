@@ -4,9 +4,9 @@
  *
  * $Id$
  */
-package com.xored.x5agent.model.util;
+package com.xored.x5.util;
 
-import com.xored.x5agent.model.*;
+import com.xored.x5.*;
 
 import java.util.Map;
 
@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * The <b>Adapter Factory</b> for the model.
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
- * @see com.xored.x5agent.model.X5Package
+ * @see com.xored.x5.X5Package
  * @generated
  */
 public class X5AdapterFactory extends AdapterFactoryImpl {
@@ -114,13 +114,13 @@ public class X5AdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link com.xored.x5agent.model.X5Request <em>Request</em>}'.
+	 * Creates a new adapter for an object of class '{@link com.xored.x5.X5Request <em>Request</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see com.xored.x5agent.model.X5Request
+	 * @see com.xored.x5.X5Request
 	 * @generated
 	 */
 	public Adapter createX5RequestAdapter() {
@@ -128,13 +128,13 @@ public class X5AdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link com.xored.x5agent.model.X5Response <em>Response</em>}'.
+	 * Creates a new adapter for an object of class '{@link com.xored.x5.X5Response <em>Response</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see com.xored.x5agent.model.X5Response
+	 * @see com.xored.x5.X5Response
 	 * @generated
 	 */
 	public Adapter createX5ResponseAdapter() {
@@ -142,13 +142,13 @@ public class X5AdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link com.xored.x5agent.model.X5Fact <em>Fact</em>}'.
+	 * Creates a new adapter for an object of class '{@link com.xored.x5.X5Fact <em>Fact</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see com.xored.x5agent.model.X5Fact
+	 * @see com.xored.x5.X5Fact
 	 * @generated
 	 */
 	public Adapter createX5FactAdapter() {
@@ -170,13 +170,13 @@ public class X5AdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link com.xored.x5agent.model.X5FactResponse <em>Fact Response</em>}'.
+	 * Creates a new adapter for an object of class '{@link com.xored.x5.X5FactResponse <em>Fact Response</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see com.xored.x5agent.model.X5FactResponse
+	 * @see com.xored.x5.X5FactResponse
 	 * @generated
 	 */
 	public Adapter createX5FactResponseAdapter() {

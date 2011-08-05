@@ -1,5 +1,6 @@
 package com.xored.x5agent.core;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -8,7 +9,9 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.xored.emfjson.Emf2Json;
 
 public enum X5Agent {
@@ -55,10 +58,12 @@ public enum X5Agent {
 	}
 
 	public void logInfo(String message) {
+		// TODO use logger
 		System.out.println(message);
 	}
 
 	public void logError(Throwable t) {
+		// TODO use logger
 		t.printStackTrace();
 	}
 
@@ -68,7 +73,7 @@ public enum X5Agent {
 		return json.toString();
 	}
 
-	public byte[] eObjectToBytes(EObject eObject) {
+	public byte[] eObjectToByteArray(EObject eObject) {
 		Resource r = new BinaryResourceImpl();
 		r.getContents().add(eObject);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -77,6 +82,29 @@ public enum X5Agent {
 			return out.toByteArray();
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to serialize", e);
+		}
+	}
+
+	public EObject jsonToEObject(String json) {
+		Emf2Json emf2Json = new Emf2Json(packages);
+		JsonParser p = new JsonParser();
+		JsonElement e = p.parse(json);
+		if (e instanceof JsonObject) {
+			EObject eObject = emf2Json.deserialize((JsonObject) e);
+			return eObject;
+		}
+		throw new IllegalArgumentException("Unexpected format");
+	}
+
+	public EObject byteArrayToEObject(byte[] bytes) {
+		Resource r = new BinaryResourceImpl();
+		ByteArrayInputStream bin = new ByteArrayInputStream(bytes);
+		try {
+			r.load(bin, null);
+			EObject eObject = r.getContents().get(0);
+			return eObject;
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to deserialize", e);
 		}
 	}
 }

@@ -11,10 +11,10 @@ import java.util.concurrent.Executors;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.xored.x5.X5Fact;
+import com.xored.x5.X5Factory;
 import com.xored.x5agent.core.X5StreamDescriptor.X5EventDescriptor;
 import com.xored.x5agent.core.X5StreamDescriptor.X5SnapshotDescriptor;
-import com.xored.x5agent.model.X5Fact;
-import com.xored.x5agent.model.X5Factory;
 
 public final class X5Stream {
 

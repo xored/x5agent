@@ -4,7 +4,7 @@
  *
  * $Id$
  */
-package com.xored.x5agent.model;
+package com.xored.x5;
 
 import org.eclipse.emf.common.util.EMap;
 
@@ -18,17 +18,17 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link com.xored.x5agent.model.X5Fact#getId <em>Id</em>}</li>
- *   <li>{@link com.xored.x5agent.model.X5Fact#getClientapp <em>Clientapp</em>}</li>
- *   <li>{@link com.xored.x5agent.model.X5Fact#getClient <em>Client</em>}</li>
- *   <li>{@link com.xored.x5agent.model.X5Fact#getTimestamp <em>Timestamp</em>}</li>
- *   <li>{@link com.xored.x5agent.model.X5Fact#getSchema <em>Schema</em>}</li>
- *   <li>{@link com.xored.x5agent.model.X5Fact#getBody <em>Body</em>}</li>
- *   <li>{@link com.xored.x5agent.model.X5Fact#getReferences <em>References</em>}</li>
+ *   <li>{@link com.xored.x5.X5Fact#getId <em>Id</em>}</li>
+ *   <li>{@link com.xored.x5.X5Fact#getClientapp <em>Clientapp</em>}</li>
+ *   <li>{@link com.xored.x5.X5Fact#getClient <em>Client</em>}</li>
+ *   <li>{@link com.xored.x5.X5Fact#getTimestamp <em>Timestamp</em>}</li>
+ *   <li>{@link com.xored.x5.X5Fact#getSchema <em>Schema</em>}</li>
+ *   <li>{@link com.xored.x5.X5Fact#getBody <em>Body</em>}</li>
+ *   <li>{@link com.xored.x5.X5Fact#getReferences <em>References</em>}</li>
  * </ul>
  * </p>
  *
- * @see com.xored.x5agent.model.X5Package#getX5Fact()
+ * @see com.xored.x5.X5Package#getX5Fact()
  * @model
  * @generated
  */
@@ -43,14 +43,14 @@ public interface X5Fact extends X5Request {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
-	 * @see com.xored.x5agent.model.X5Package#getX5Fact_Id()
+	 * @see com.xored.x5.X5Package#getX5Fact_Id()
 	 * @model id="true"
 	 * @generated
 	 */
 	String getId();
 
 	/**
-	 * Sets the value of the '{@link com.xored.x5agent.model.X5Fact#getId <em>Id</em>}' attribute.
+	 * Sets the value of the '{@link com.xored.x5.X5Fact#getId <em>Id</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Id</em>' attribute.
@@ -69,14 +69,14 @@ public interface X5Fact extends X5Request {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Clientapp</em>' attribute.
 	 * @see #setClientapp(String)
-	 * @see com.xored.x5agent.model.X5Package#getX5Fact_Clientapp()
+	 * @see com.xored.x5.X5Package#getX5Fact_Clientapp()
 	 * @model
 	 * @generated
 	 */
 	String getClientapp();
 
 	/**
-	 * Sets the value of the '{@link com.xored.x5agent.model.X5Fact#getClientapp <em>Clientapp</em>}' attribute.
+	 * Sets the value of the '{@link com.xored.x5.X5Fact#getClientapp <em>Clientapp</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Clientapp</em>' attribute.
@@ -95,14 +95,14 @@ public interface X5Fact extends X5Request {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Client</em>' attribute.
 	 * @see #setClient(String)
-	 * @see com.xored.x5agent.model.X5Package#getX5Fact_Client()
+	 * @see com.xored.x5.X5Package#getX5Fact_Client()
 	 * @model
 	 * @generated
 	 */
 	String getClient();
 
 	/**
-	 * Sets the value of the '{@link com.xored.x5agent.model.X5Fact#getClient <em>Client</em>}' attribute.
+	 * Sets the value of the '{@link com.xored.x5.X5Fact#getClient <em>Client</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Client</em>' attribute.
@@ -121,14 +121,14 @@ public interface X5Fact extends X5Request {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Timestamp</em>' attribute.
 	 * @see #setTimestamp(long)
-	 * @see com.xored.x5agent.model.X5Package#getX5Fact_Timestamp()
+	 * @see com.xored.x5.X5Package#getX5Fact_Timestamp()
 	 * @model
 	 * @generated
 	 */
 	long getTimestamp();
 
 	/**
-	 * Sets the value of the '{@link com.xored.x5agent.model.X5Fact#getTimestamp <em>Timestamp</em>}' attribute.
+	 * Sets the value of the '{@link com.xored.x5.X5Fact#getTimestamp <em>Timestamp</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Timestamp</em>' attribute.
@@ -147,14 +147,14 @@ public interface X5Fact extends X5Request {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Schema</em>' attribute.
 	 * @see #setSchema(String)
-	 * @see com.xored.x5agent.model.X5Package#getX5Fact_Schema()
+	 * @see com.xored.x5.X5Package#getX5Fact_Schema()
 	 * @model
 	 * @generated
 	 */
 	String getSchema();
 
 	/**
-	 * Sets the value of the '{@link com.xored.x5agent.model.X5Fact#getSchema <em>Schema</em>}' attribute.
+	 * Sets the value of the '{@link com.xored.x5.X5Fact#getSchema <em>Schema</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Schema</em>' attribute.
@@ -173,14 +173,14 @@ public interface X5Fact extends X5Request {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Body</em>' containment reference.
 	 * @see #setBody(EObject)
-	 * @see com.xored.x5agent.model.X5Package#getX5Fact_Body()
+	 * @see com.xored.x5.X5Package#getX5Fact_Body()
 	 * @model containment="true"
 	 * @generated
 	 */
 	EObject getBody();
 
 	/**
-	 * Sets the value of the '{@link com.xored.x5agent.model.X5Fact#getBody <em>Body</em>}' containment reference.
+	 * Sets the value of the '{@link com.xored.x5.X5Fact#getBody <em>Body</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Body</em>' containment reference.
@@ -200,8 +200,8 @@ public interface X5Fact extends X5Request {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>References</em>' map.
-	 * @see com.xored.x5agent.model.X5Package#getX5Fact_References()
-	 * @model mapType="com.xored.x5agent.model.EStringToEStringMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString>"
+	 * @see com.xored.x5.X5Package#getX5Fact_References()
+	 * @model mapType="com.xored.x5.EStringToEStringMapEntry<org.eclipse.emf.ecore.EString, org.eclipse.emf.ecore.EString>"
 	 * @generated
 	 */
 	EMap<String, String> getReferences();

@@ -2,8 +2,8 @@ package com.xored.x5agent.core;
 
 import java.util.Map;
 
-import com.xored.x5agent.model.X5Request;
-import com.xored.x5agent.model.X5Response;
+import com.xored.x5.X5Request;
+import com.xored.x5.X5Response;
 
 public interface X5Transport {
 	/**

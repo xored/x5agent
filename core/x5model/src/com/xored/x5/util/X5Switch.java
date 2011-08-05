@@ -4,9 +4,9 @@
  *
  * $Id$
  */
-package com.xored.x5agent.model.util;
+package com.xored.x5.util;
 
-import com.xored.x5agent.model.*;
+import com.xored.x5.*;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  * until a non-null result is returned,
  * which is the result of the switch.
  * <!-- end-user-doc -->
- * @see com.xored.x5agent.model.X5Package
+ * @see com.xored.x5.X5Package
  * @generated
  */
 public class X5Switch<T> {

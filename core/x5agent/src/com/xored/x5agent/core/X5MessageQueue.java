@@ -6,11 +6,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.xored.x5.DeliveryStatus;
+import com.xored.x5.X5Fact;
+import com.xored.x5.X5FactResponse;
+import com.xored.x5.X5Response;
 import com.xored.x5agent.core.X5StreamDescriptor.X5TransportDescriptor;
-import com.xored.x5agent.model.DeliveryStatus;
-import com.xored.x5agent.model.X5Fact;
-import com.xored.x5agent.model.X5FactResponse;
-import com.xored.x5agent.model.X5Response;
 
 class X5MessageQueue {
 

@@ -4,7 +4,7 @@
  *
  * $Id$
  */
-package com.xored.x5agent.model;
+package com.xored.x5;
 
 import org.eclipse.emf.ecore.EObject;
 
@@ -14,8 +14,8 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- end-user-doc -->
  *
  *
- * @see com.xored.x5agent.model.X5Package#getX5Response()
- * @model interface="true" abstract="true"
+ * @see com.xored.x5.X5Package#getX5Response()
+ * @model
  * @generated
  */
 public interface X5Response extends EObject {
