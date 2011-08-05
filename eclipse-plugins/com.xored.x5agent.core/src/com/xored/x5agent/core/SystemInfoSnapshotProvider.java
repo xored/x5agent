@@ -5,7 +5,6 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 
 import com.xored.sherlock.core.info.Info;
-import com.xored.x5agent.core.X5SnapshotProvider;
 
 public class SystemInfoSnapshotProvider implements X5SnapshotProvider {
 
@@ -24,16 +23,6 @@ public class SystemInfoSnapshotProvider implements X5SnapshotProvider {
 	public EObject getSnapshot() {
 		if (snapshot == null) {
 			snapshot = Info.getSystem();
-			// snapshot = new JsonObject();
-			// Gson gson = new Gson();
-			// snapshot.addProperty("osName", SystemInfoProvider.getOSName());
-			// snapshot.addProperty("osVersion",
-			// SystemInfoProvider.getOSVersion());
-			// snapshot.addProperty("osArch", SystemInfoProvider.getOSArch());
-			// snapshot.addProperty("username",
-			// SystemInfoProvider.getUsername());
-			// snapshot.add("variables",
-			// gson.toJsonTree(SystemInfoProvider.getVariables()));
 		}
 		return snapshot;
 	}
