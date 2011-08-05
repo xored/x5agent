@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.eclipse.emf.ecore.EObject;
 
@@ -19,6 +21,7 @@ public final class X5Stream {
 	private final X5MessageQueue queue;
 	private final List<Event> events = new ArrayList<Event>();
 	private final Map<String, X5Fact> snapshots = new HashMap<String, X5Fact>();
+	private final ExecutorService pool = Executors.newFixedThreadPool(3);
 
 	public static X5Stream create(X5StreamDescriptor descriptor) {
 		return new X5Stream(descriptor);
@@ -83,31 +86,36 @@ public final class X5Stream {
 		}
 
 		@Override
-		public void notify(EObject e) {
+		public void notify(final EObject e) {
 			if (e == null) {
 				return;
 			}
-			Map<String, String> references = new HashMap<String, String>();
-			for (X5SnapshotProvider sp : snapshotProviders) {
-				EObject s = sp.getSnapshot();
-				if (s == null) {
-					continue;
-				}
-				X5Fact m = snapshots.get(sp.getSchema());
-				if (m != null) {
-					if (!s.equals(m.getBody())) {
-						m = null;
+			pool.execute(new Runnable() {
+				@Override
+				public void run() {
+					Map<String, String> references = new HashMap<String, String>();
+					for (X5SnapshotProvider sp : snapshotProviders) {
+						EObject s = sp.getSnapshot();
+						if (s == null) {
+							continue;
+						}
+						X5Fact m = snapshots.get(sp.getSchema());
+						if (m == null || !s.equals(m.getBody())) {
+							synchronized (snapshots) {
+								m = snapshots.get(sp.getSchema());
+								if (m == null || !s.equals(m.getBody())) {
+									m = create(sp.getSchema(), s);
+									X5Stream.this.handle(m);
+									snapshots.put(sp.getSchema(), m);
+								}
+							}
+						}
+						references.put(sp.getSchema(), m.getId());
 					}
-				}
-				if (m == null) {
-					m = create(sp.getSchema(), s);
+					X5Fact m = create(provider.getSchema(), e, references);
 					X5Stream.this.handle(m);
-					snapshots.put(sp.getSchema(), m);
 				}
-				references.put(sp.getSchema(), m.getId());
-			}
-			X5Fact m = create(provider.getSchema(), e, references);
-			X5Stream.this.handle(m);
+			});
 		}
 
 		private X5Fact create(String schema, EObject fact,
