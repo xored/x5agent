@@ -15,29 +15,42 @@ public enum X5Agent {
 
 	private X5Stream[] streams;
 	private EPackage[] packages;
+	private X5Preferences preferences;
 
-	public void initialize(EPackage[] packages, X5Stream[] streams) {
+	public void initialize(X5Preferences preferences, EPackage[] packages,
+			X5Stream[] streams) {
+		if (preferences == null)
+			throw new NullPointerException("X5 preferences is null");
+		this.preferences = preferences;
 		this.packages = packages;
 		this.streams = streams;
-		for (X5Stream stream : streams) {
-			stream.initialize();
+		if (this.streams != null) {
+			for (X5Stream stream : this.streams) {
+				stream.initialize();
+			}
 		}
 	}
 
 	public void dispose() {
-		for (X5Stream stream : streams) {
-			stream.dispose();
+		if (streams != null) {
+			for (X5Stream stream : streams) {
+				stream.dispose();
+			}
 		}
 	}
 
 	public String getClientApp() {
-		// TODO store in preferences
-		return "2c01adaf-3a40-430b-9aa9-551daf81ad90";
+		String clientApp = preferences.getClientApp();
+		if (preferences == null)
+			throw new NullPointerException("Client Application Id is null");
+		return clientApp;
 	}
 
 	public String getClient() {
-		// TODO store in preferences
-		return "xored-test";
+		String client = preferences.getClient();
+		if (preferences == null)
+			throw new NullPointerException("Client is null");
+		return client;
 	}
 
 	public Logger getLog() {

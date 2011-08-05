@@ -41,6 +41,7 @@ public class Activator extends Plugin {
 			protected IStatus run(IProgressMonitor monitor) {
 				X5Agent.Instance
 						.initialize(
+								X5PreferenceStorage.Instance,
 								new EPackage[] {
 										EPackage.Registry.INSTANCE
 												.getEPackage("http://xored.com/x5/1.0"),
