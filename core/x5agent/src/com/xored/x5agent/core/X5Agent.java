@@ -1,17 +1,18 @@
 package com.xored.x5agent.core;
 
-import java.util.logging.Logger;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.BinaryResourceImpl;
 
 import com.google.gson.JsonObject;
 import com.xored.emfjson.Emf2Json;
 
 public enum X5Agent {
 	Instance;
-
-	private final Logger logger = Logger.getLogger("com.xored.x5agent.core");
 
 	private X5Stream[] streams;
 	private EPackage[] packages;
@@ -53,14 +54,29 @@ public enum X5Agent {
 		return client;
 	}
 
-	public Logger getLog() {
-		return logger;
+	public void logInfo(String message) {
+		System.out.println(message);
 	}
 
-	public JsonObject eObjectToJson(EObject eObject) {
-		Emf2Json serializer = new Emf2Json(packages);
-		JsonObject json = serializer.serialize(eObject);
-		return json;
+	public void logError(Throwable t) {
+		t.printStackTrace();
 	}
 
+	public String eObjectToJson(EObject eObject) {
+		Emf2Json emf2Json = new Emf2Json(packages);
+		JsonObject json = emf2Json.serialize(eObject);
+		return json.toString();
+	}
+
+	public byte[] eObjectToBytes(EObject eObject) {
+		Resource r = new BinaryResourceImpl();
+		r.getContents().add(eObject);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			r.save(out, null);
+			return out.toByteArray();
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to serialize", e);
+		}
+	}
 }

@@ -34,7 +34,7 @@ class X5MessageQueue {
 	}
 
 	void add(X5Fact fact) {
-		X5Agent.Instance.getLog().info(fact.getId() + " put to queue");
+		X5Agent.Instance.logInfo(fact.getId() + " put to queue");
 		facts.add(fact);
 	}
 
@@ -59,20 +59,13 @@ class X5MessageQueue {
 							@Override
 							public void run() {
 								X5Response response = transport.send(fact);
-								if (response == null) {
+								boolean retry = response == null
+										|| (response instanceof X5FactResponse && ((X5FactResponse) response)
+												.getStatus() == DeliveryStatus.RETRY);
+								if (retry) {
 									synchronized (facts) {
-										X5Agent.Instance.getLog()
-												.info(fact.getId()
-														+ " back to queue");
-										facts.add(fact);
-									}
-								}
-								X5FactResponse factResponse = (X5FactResponse) response;
-								if (factResponse.getStatus() == DeliveryStatus.RETRY) {
-									synchronized (facts) {
-										X5Agent.Instance.getLog()
-												.info(fact.getId()
-														+ " back to queue");
+										X5Agent.Instance.logInfo(fact.getId()
+												+ " back to queue");
 										facts.add(fact);
 									}
 								}
@@ -101,7 +94,8 @@ class X5MessageQueue {
 			try {
 				if (transport == null) {
 					transport = descriptor.create();
-					transport.initialize(descriptor.parameters());
+					transport.initialize(X5Agent.Instance,
+							descriptor.parameters());
 				}
 				return transport.send(message);
 			} catch (Exception e) {

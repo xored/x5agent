@@ -8,6 +8,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.xored.x5agent.core
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.emf.ecore.xmi,
  com.xored.emfjson;bundle-version="1.0.0";visibility:=reexport,
  x5model;bundle-version="1.0.0";visibility:=reexport
 Bundle-ActivationPolicy: lazy

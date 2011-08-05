@@ -1,17 +1,19 @@
 package com.xored.x5agent.http;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.protocol.HTTP;
 
-import com.google.gson.JsonObject;
 import com.xored.x5agent.core.X5Agent;
 import com.xored.x5agent.core.X5Transport;
 import com.xored.x5agent.model.DeliveryStatus;
@@ -22,10 +24,12 @@ import com.xored.x5agent.model.X5Response;
 
 public class HttpTransport implements X5Transport {
 
+	private X5Agent agent;
 	private String baseUrl;
 
 	@Override
-	public void initialize(Map<String, String> parameters) {
+	public void initialize(X5Agent agent, Map<String, String> parameters) {
+		this.agent = agent;
 		this.baseUrl = parameters.get("url");
 	}
 
@@ -33,12 +37,11 @@ public class HttpTransport implements X5Transport {
 	public X5Response send(X5Request request) {
 		try {
 			HttpClient client = new DefaultHttpClient();
-			// "http://localhost:8080/api2"+
 			String url = this.baseUrl + "/" + X5Agent.Instance.getClient()
 					+ "/facts/";
-			JsonObject json = X5Agent.Instance.eObjectToJson(request);
 			HttpPost post = new HttpPost(url);
-			NStringEntity entity = new NStringEntity(json.toString(), "utf-8");
+			NStringEntity entity = new NStringEntity(
+					agent.eObjectToJson(request), "utf-8");
 			entity.setContentType("application/json" + HTTP.CHARSET_PARAM
 					+ "utf-8");
 			post.setEntity(entity);
@@ -56,7 +59,11 @@ public class HttpTransport implements X5Transport {
 				factResponse.setStatus(DeliveryStatus.WONT_ACCEPT);
 			}
 			return factResponse;
-		} catch (Exception e) {
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		} catch (ClientProtocolException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
