@@ -1,4 +1,4 @@
-package com.xored.x5server.core;
+package com.xored.x5;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,20 +12,26 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.xored.emfjson.Emf2Json;
-import com.xored.sherlock.core.model.sherlock.SherlockPackage;
-import com.xored.x5.X5Package;
 
-public abstract class AbstractX5Server implements X5Server {
+public class EmfSerializer {
 
-	@Override
 	public String eObjectToJson(EObject eObject) {
-		Emf2Json emf2Json = new Emf2Json(X5Package.eINSTANCE,
-				SherlockPackage.eINSTANCE);
+		Emf2Json emf2Json = new Emf2Json();
 		JsonObject json = emf2Json.serialize(eObject);
 		return json.toString();
 	}
 
-	@Override
+	public EObject jsonToEObject(String json) {
+		Emf2Json emf2Json = new Emf2Json();
+		JsonParser p = new JsonParser();
+		JsonElement e = p.parse(json);
+		if (e instanceof JsonObject) {
+			EObject eObject = emf2Json.deserialize((JsonObject) e);
+			return eObject;
+		}
+		throw new IllegalArgumentException("Unexpected format");
+	}
+
 	public byte[] eObjectToByteArray(EObject eObject) {
 		Resource r = new BinaryResourceImpl();
 		r.getContents().add(eObject);
@@ -38,20 +44,6 @@ public abstract class AbstractX5Server implements X5Server {
 		}
 	}
 
-	@Override
-	public EObject jsonToEObject(String json) {
-		Emf2Json emf2Json = new Emf2Json(X5Package.eINSTANCE,
-				SherlockPackage.eINSTANCE);
-		JsonParser p = new JsonParser();
-		JsonElement e = p.parse(json);
-		if (e instanceof JsonObject) {
-			EObject eObject = emf2Json.deserialize((JsonObject) e);
-			return eObject;
-		}
-		throw new IllegalArgumentException("Unexpected format");
-	}
-
-	@Override
 	public EObject byteArrayToEObject(byte[] bytes) {
 		Resource r = new BinaryResourceImpl();
 		ByteArrayInputStream bin = new ByteArrayInputStream(bytes);
@@ -62,17 +54,5 @@ public abstract class AbstractX5Server implements X5Server {
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to deserialize", e);
 		}
-	}
-
-	@Override
-	public void logInfo(String message) {
-		// TODO use logger
-		System.out.println(message);
-	}
-
-	@Override
-	public void logError(Throwable t) {
-		// TODO use logger
-		t.printStackTrace();
 	}
 }

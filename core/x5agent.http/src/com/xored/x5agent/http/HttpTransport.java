@@ -18,6 +18,7 @@ import org.apache.http.util.EntityUtils;
 import org.eclipse.emf.ecore.EObject;
 
 import com.xored.x5.DeliveryStatus;
+import com.xored.x5.EmfSerializer;
 import com.xored.x5.X5FactResponse;
 import com.xored.x5.X5Factory;
 import com.xored.x5.X5Request;
@@ -27,24 +28,23 @@ import com.xored.x5agent.core.X5Transport;
 
 public class HttpTransport implements X5Transport {
 
-	private X5Agent agent;
 	private String baseUrl;
 
 	@Override
-	public void initialize(X5Agent agent, Map<String, String> parameters) {
-		this.agent = agent;
+	public void initialize(Map<String, String> parameters) {
 		this.baseUrl = parameters.get("url");
 	}
 
 	@Override
 	public X5Response send(X5Request request) {
+		EmfSerializer emfSerializer = new EmfSerializer();
 		try {
 			HttpClient client = new DefaultHttpClient();
 			String url = this.baseUrl + "/" + X5Agent.Instance.getClient()
 					+ "/facts/";
 			HttpPost post = new HttpPost(url);
 			NStringEntity entity = new NStringEntity(
-					agent.eObjectToJson(request), "utf-8");
+					emfSerializer.eObjectToJson(request), "utf-8");
 			entity.setContentType("application/json" + HTTP.CHARSET_PARAM
 					+ "utf-8");
 			post.setEntity(entity);
@@ -64,7 +64,7 @@ public class HttpTransport implements X5Transport {
 				}
 			} else {
 				String json = EntityUtils.toString(responseEntity);
-				EObject eObject = agent.jsonToEObject(json);
+				EObject eObject = emfSerializer.jsonToEObject(json);
 				if (eObject instanceof X5Response) {
 					return (X5Response) eObject;
 				}

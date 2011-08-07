@@ -42,11 +42,6 @@ public class Activator extends Plugin {
 				X5Agent.Instance
 						.initialize(
 								X5PreferenceStorage.Instance,
-								new EPackage[] {
-										EPackage.Registry.INSTANCE
-												.getEPackage("http://xored.com/x5/1.0"),
-										EPackage.Registry.INSTANCE
-												.getEPackage("http://xored.com/sherlock/1.0") },
 								X5AgentRegistry.Instance.getStreams());
 
 				return Status.OK_STATUS;

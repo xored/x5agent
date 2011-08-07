@@ -94,8 +94,7 @@ class X5MessageQueue {
 			try {
 				if (transport == null) {
 					transport = descriptor.create();
-					transport.initialize(X5Agent.Instance,
-							descriptor.parameters());
+					transport.initialize(descriptor.parameters());
 				}
 				return transport.send(message);
 			} catch (Exception e) {

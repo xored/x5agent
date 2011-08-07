@@ -10,7 +10,7 @@ public interface X5Transport {
 	 * Will be called after object’s construction, but before any actual usage
 	 * of the object.
 	 */
-	void initialize(X5Agent agent, Map<String, String> parameters);
+	void initialize(Map<String, String> parameters);
 
 	/**
 	 * @param request

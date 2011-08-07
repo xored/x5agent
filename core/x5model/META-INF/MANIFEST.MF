@@ -3,6 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Model
 Bundle-SymbolicName: x5model;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.eclipse.emf.ecore;bundle-version="2.6.1"
+Require-Bundle: org.eclipse.emf.ecore,
+ com.xored.emfjson;bundle-version="1.0.0"
 Export-Package: com.xored.x5
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
