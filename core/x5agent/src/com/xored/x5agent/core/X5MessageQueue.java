@@ -1,15 +1,15 @@
 package com.xored.x5agent.core;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.xored.x5.DeliveryStatus;
 import com.xored.x5.X5Fact;
 import com.xored.x5.X5FactResponse;
 import com.xored.x5.X5Response;
+import com.xored.x5.X5TransportFatalException;
 import com.xored.x5agent.core.X5StreamDescriptor.X5TransportDescriptor;
 
 class X5MessageQueue {
@@ -17,9 +17,9 @@ class X5MessageQueue {
 	// TODO store fact queue in file system
 
 	private final Transport transport;
-	private final Set<X5Fact> facts = new HashSet<X5Fact>();
+	private final List<X5Fact> facts = new ArrayList<X5Fact>();
 	private final ExecutorService pool = Executors.newFixedThreadPool(3);
-	private final AtomicBoolean disposed = new AtomicBoolean(false);
+	private boolean disposed = false;
 
 	X5MessageQueue(X5TransportDescriptor descriptor) {
 		this.transport = new Transport(descriptor);
@@ -34,40 +34,58 @@ class X5MessageQueue {
 	}
 
 	void add(X5Fact fact) {
-		X5Agent.Instance.logInfo(fact.getId() + " put to queue");
-		facts.add(fact);
+		X5Agent.Instance.logInfo("Fact was added to queue: " + fact.getId());
+		synchronized (this) {
+			if (!disposed) {
+				facts.add(fact);
+			}
+		}
 	}
 
-	void dispose() {
-		disposed.set(true);
-		transport.dispose();
+	private synchronized X5Fact[] getFacts() {
+		if (!disposed) {
+			X5Fact[] array = facts.toArray(new X5Fact[facts.size()]);
+			facts.clear();
+			return array;
+		}
+		return new X5Fact[0];
+	}
+
+	synchronized void dispose() {
+		if (!disposed) {
+			disposed = true;
+			transport.dispose();
+		}
 	}
 
 	private final class Sender implements Runnable {
 		@Override
 		public void run() {
 			try {
-				while (!disposed.get()) {
+				X5Agent.Instance.logInfo("Message sender started");
+				while (true) {
 					Thread.sleep(getSendInterval());
-					X5Fact[] array;
-					synchronized (facts) {
-						array = facts.toArray(new X5Fact[facts.size()]);
-						facts.clear();
+					if (transport.isDisposed()) {
+						X5Agent.Instance.logInfo("Message sender stopped");
+						return;
 					}
+					X5Fact[] array = getFacts();
 					for (final X5Fact fact : array) {
 						pool.execute(new Runnable() {
 							@Override
 							public void run() {
-								X5Response response = transport.send(fact);
-								boolean retry = response == null
-										|| (response instanceof X5FactResponse && ((X5FactResponse) response)
-												.getStatus() == DeliveryStatus.RETRY);
-								if (retry) {
-									synchronized (facts) {
-										X5Agent.Instance.logInfo(fact.getId()
-												+ " back to queue");
-										facts.add(fact);
-									}
+								boolean retry = true;
+								try {
+									X5Response response = transport.send(fact);
+									retry = response == null
+											|| (response instanceof X5FactResponse && ((X5FactResponse) response)
+													.getStatus() == DeliveryStatus.RETRY);
+								} catch (Exception e) {
+									X5Agent.Instance.logError(e);
+									retry = true;
+								}
+								if (retry && !transport.isDisposed()) {
+									add(fact);
 								}
 							}
 						});
@@ -76,7 +94,7 @@ class X5MessageQueue {
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			} catch (Exception e) {
-				// TODO handle
+				X5Agent.Instance.logError(e);
 			}
 		}
 	}
@@ -84,6 +102,7 @@ class X5MessageQueue {
 	private final class Transport {
 
 		private final X5TransportDescriptor descriptor;
+		private boolean disposed = false;
 		private X5Transport transport;
 
 		private Transport(X5TransportDescriptor descriptor) {
@@ -91,36 +110,60 @@ class X5MessageQueue {
 		}
 
 		private synchronized X5Response send(X5Fact message) {
-			try {
-				if (transport == null) {
-					transport = descriptor.create();
-					transport.initialize(descriptor.parameters());
-				}
-				return transport.send(message);
-			} catch (Exception e) {
-				e.printStackTrace();
-				// TODO handle exception
+			if (!disposed) {
+				boolean initialized = transport != null;
 				try {
-					if (transport != null) {
-						transport.dispose();
+					if (transport == null) {
+						X5Agent.Instance
+								.logInfo("Create new transport instance");
+						transport = descriptor.create();
+						if (transport == null)
+							throw new X5TransportFatalException(
+									"Transport is not specified");
+						X5Agent.Instance.logInfo("Init created transport");
+						transport.initialize(descriptor.parameters());
+						initialized = true;
 					}
-				} catch (Exception e1) {
-					e1.printStackTrace();
-					// TODO handle exception
+					X5Agent.Instance
+							.logInfo("Send message: " + message.getId());
+					return transport.send(message);
+				} catch (X5TransportFatalException e) {
+					X5Agent.Instance.logError(e);
+					dispose();
+				} catch (Exception e) {
+					X5Agent.Instance.logError(e);
+					if (transport != null && !initialized) {
+						try {
+							X5Agent.Instance
+									.logInfo("Dispose broken transport");
+							transport.dispose();
+						} catch (Exception e1) {
+							X5Agent.Instance.logError(e1);
+						} finally {
+							transport = null;
+						}
+					}
 				}
-				transport = null;
 			}
 			return null;
 		}
 
-		private void dispose() {
-			if (transport != null) {
-				try {
-					transport.dispose();
-				} catch (Exception e) {
-					// TODO handle exception
+		private synchronized boolean isDisposed() {
+			return disposed;
+		}
+
+		private synchronized void dispose() {
+			if (!disposed) {
+				X5Agent.Instance.logInfo("Dispose transport support");
+				disposed = true;
+				if (transport != null) {
+					try {
+						transport.dispose();
+					} catch (Exception e) {
+						X5Agent.Instance.logError(e);
+					}
+					transport = null;
 				}
-				transport = null;
 			}
 		}
 	}

@@ -13,6 +13,8 @@ public interface X5Transport {
 	void initialize(Map<String, String> parameters);
 
 	/**
+	 * Must be thread-safe.
+	 * 
 	 * @param request
 	 *            Request to send to the destination.
 	 */
