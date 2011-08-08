@@ -6,7 +6,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.emf.ecore.EPackage;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -39,10 +38,8 @@ public class Activator extends Plugin {
 		Job job = new Job("Starting X5 Agent...") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				X5Agent.Instance
-						.initialize(
-								X5PreferenceStorage.Instance,
-								X5AgentRegistry.Instance.getStreams());
+				X5Agent.Instance.initialize(X5PreferenceStorage.Instance,
+						X5AgentRegistry.Instance.getStreams());
 
 				return Status.OK_STATUS;
 			}
