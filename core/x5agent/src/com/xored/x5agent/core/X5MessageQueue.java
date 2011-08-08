@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.xored.x5.DeliveryStatus;
 import com.xored.x5.X5Fact;
 import com.xored.x5.X5FactResponse;
 import com.xored.x5.X5Response;
-import com.xored.x5.X5TransportFatalException;
 import com.xored.x5agent.core.X5StreamDescriptor.X5TransportDescriptor;
 
 class X5MessageQueue {
@@ -102,60 +102,76 @@ class X5MessageQueue {
 	private final class Transport {
 
 		private final X5TransportDescriptor descriptor;
-		private boolean disposed = false;
+		private final AtomicBoolean disposed = new AtomicBoolean(false);
 		private X5Transport transport;
 
 		private Transport(X5TransportDescriptor descriptor) {
 			this.descriptor = descriptor;
 		}
 
-		private synchronized X5Response send(X5Fact message) {
-			if (!disposed) {
-				boolean initialized = transport != null;
-				try {
+		private X5Transport getTransport() {
+			if (transport == null) {
+				synchronized (this) {
 					if (transport == null) {
-						X5Agent.Instance
-								.logInfo("Create new transport instance");
-						transport = descriptor.create();
-						if (transport == null)
-							throw new X5TransportFatalException(
-									"Transport is not specified");
-						X5Agent.Instance.logInfo("Init created transport");
-						transport.initialize(descriptor.parameters());
-						initialized = true;
-					}
-					X5Agent.Instance
-							.logInfo("Send message: " + message.getId());
-					return transport.send(message);
-				} catch (X5TransportFatalException e) {
-					X5Agent.Instance.logError(e);
-					dispose();
-				} catch (Exception e) {
-					X5Agent.Instance.logError(e);
-					if (transport != null && !initialized) {
 						try {
 							X5Agent.Instance
-									.logInfo("Dispose broken transport");
-							transport.dispose();
-						} catch (Exception e1) {
-							X5Agent.Instance.logError(e1);
-						} finally {
-							transport = null;
+									.logInfo("Create new transport instance");
+							transport = descriptor.create();
+							if (transport == null)
+								throw new X5TransportFatalException(
+										"Transport is not specified");
+							X5Agent.Instance.logInfo("Init created transport");
+							transport.initialize(descriptor.parameters());
+						} catch (X5TransportFatalException e) {
+							X5Agent.Instance.logError(e);
+							dispose();
+						} catch (Exception e) {
+							X5Agent.Instance.logError(e);
+							if (transport != null) {
+								try {
+									X5Agent.Instance
+											.logInfo("Dispose broken transport");
+									transport.dispose();
+								} catch (Exception e1) {
+									X5Agent.Instance.logError(e1);
+								} finally {
+									transport = null;
+								}
+							}
 						}
 					}
+
+				}
+			}
+			return transport;
+		}
+
+		private X5Response send(X5Fact message) {
+			if (!disposed.get()) {
+				try {
+					X5Agent.Instance
+							.logInfo("Send message: " + message.getId());
+					X5Transport t = getTransport();
+					if (t != null) {
+						X5Response res = t.send(message);
+						X5Agent.Instance.logInfo("Got response: "
+								+ message.getId());
+						return res;
+					}
+				} catch (Exception e) {
+					X5Agent.Instance.logError(e);
 				}
 			}
 			return null;
 		}
 
-		private synchronized boolean isDisposed() {
-			return disposed;
+		private boolean isDisposed() {
+			return disposed.get();
 		}
 
 		private synchronized void dispose() {
-			if (!disposed) {
+			if (disposed.compareAndSet(false, true)) {
 				X5Agent.Instance.logInfo("Dispose transport support");
-				disposed = true;
 				if (transport != null) {
 					try {
 						transport.dispose();
