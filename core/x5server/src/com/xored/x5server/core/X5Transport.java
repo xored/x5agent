@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface X5Transport {
 
-	void initialize(Map<String, String> parameters, X5ResponseHandler handler);
+	void initialize(Map<String, String> parameters, X5RequestHandler handler);
 
 	void dispose();
 
