@@ -5,8 +5,6 @@ Bundle-SymbolicName: x5server
 Bundle-Version: 1.0.0.qualifier
 Export-Package: com.xored.x5server.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: x5model;bundle-version="1.0.0",
- org.eclipse.emf.ecore,
+Require-Bundle: org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.xmi,
- com.xored.emfjson;bundle-version="1.0.0",
- com.xored.sherlock.model;bundle-version="1.0.0"
+ x5model;bundle-version="1.0.0"
