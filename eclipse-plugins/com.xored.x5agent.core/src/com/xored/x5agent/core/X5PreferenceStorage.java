@@ -24,7 +24,7 @@ public enum X5PreferenceStorage implements X5Preferences {
 			try {
 				node.flush();
 			} catch (Exception e) {
-				e.printStackTrace();
+				Activator.logError(e);
 			}
 		}
 		return app;
@@ -41,7 +41,7 @@ public enum X5PreferenceStorage implements X5Preferences {
 			try {
 				node.flush();
 			} catch (Exception e) {
-				e.printStackTrace();
+				Activator.logError(e);
 			}
 		}
 		return client;
@@ -54,7 +54,7 @@ public enum X5PreferenceStorage implements X5Preferences {
 		try {
 			node.flush();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Activator.logError(e);
 		}
 	}
 
@@ -65,7 +65,7 @@ public enum X5PreferenceStorage implements X5Preferences {
 		try {
 			node.flush();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Activator.logError(e);
 		}
 	}
 
