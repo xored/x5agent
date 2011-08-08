@@ -6,9 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.xored.x5agent.core.Activator
 Bundle-Vendor: XORED
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.jface,
  com.xored.sherlock.core;bundle-version="1.0.0",
- com.xored.sherlock.jface;bundle-version="1.0.0",
  x5agent;bundle-version="1.0.0";visibility:=reexport,
  x5agent.http;bundle-version="1.0.0";visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
