@@ -11,21 +11,23 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.nio.entity.NStringEntity;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.emf.ecore.EObject;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.xored.emfjson.Emf2Json;
 import com.xored.x5.DeliveryStatus;
-import com.xored.x5.EmfSerializer;
 import com.xored.x5.X5FactResponse;
 import com.xored.x5.X5Factory;
 import com.xored.x5.X5Request;
 import com.xored.x5.X5Response;
-import com.xored.x5.X5TransportFatalException;
 import com.xored.x5agent.core.X5Agent;
 import com.xored.x5agent.core.X5Transport;
+import com.xored.x5agent.core.X5TransportFatalException;
 
 public class HttpTransport implements X5Transport {
 
@@ -40,16 +42,14 @@ public class HttpTransport implements X5Transport {
 
 	@Override
 	public X5Response send(X5Request request) {
-		EmfSerializer emfSerializer = new EmfSerializer();
 		try {
+			Emf2Json emf2Json = new Emf2Json();
 			HttpClient client = new DefaultHttpClient();
 			String url = this.baseUrl + "/" + X5Agent.Instance.getClient()
 					+ "/facts/";
 			HttpPost post = new HttpPost(url);
-			NStringEntity entity = new NStringEntity(
-					emfSerializer.eObjectToJson(request), "utf-8");
-			entity.setContentType("application/json" + HTTP.CHARSET_PARAM
-					+ "utf-8");
+			StringEntity entity = new StringEntity(emf2Json.serialize(request)
+					.toString(), "application/json", "utf-8");
 			post.setEntity(entity);
 			HttpResponse response = client.execute(post);
 			HttpEntity responseEntity = response.getEntity();
@@ -67,9 +67,12 @@ public class HttpTransport implements X5Transport {
 				}
 			} else {
 				String json = EntityUtils.toString(responseEntity);
-				EObject eObject = emfSerializer.jsonToEObject(json);
-				if (eObject instanceof X5Response) {
-					return (X5Response) eObject;
+				JsonElement parsed = new JsonParser().parse(json);
+				if (parsed instanceof JsonObject) {
+					EObject eObject = emf2Json.deserialize((JsonObject) parsed);
+					if (eObject instanceof X5Response) {
+						return (X5Response) eObject;
+					}
 				}
 			}
 			throw new RuntimeException("Unexpected format");
