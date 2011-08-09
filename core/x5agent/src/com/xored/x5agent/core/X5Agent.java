@@ -40,13 +40,13 @@ public enum X5Agent {
 		return client;
 	}
 
-	public void logInfo(String message) {
-		// TODO use logger
+	void logInfo(String message) {
+		// TODO use logger instead
 		System.out.println(message);
 	}
 
-	public void logError(Throwable t) {
-		// TODO use logger
-		t.printStackTrace();
+	void logError(Throwable t) {
+		// TODO use logger instead
+		t.printStackTrace(System.out);
 	}
 }
