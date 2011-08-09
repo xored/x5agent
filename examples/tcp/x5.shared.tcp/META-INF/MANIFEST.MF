@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Shared code for X5 TCP Tranpost client and server endpoints
+Bundle-SymbolicName: x5.shared.tcp
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.emf.ecore,
+ x5model;bundle-version="1.0.0"
+Export-Package: com.xored.x5.shared.tcp

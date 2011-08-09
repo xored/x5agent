@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tcp
+Bundle-SymbolicName: x5.server.tcp
+Bundle-Version: 1.0.0.qualifier
+Export-Package: com.xored.x5.server.tcp
+Require-Bundle: x5.shared.tcp;bundle-version="1.0.0",
+ org.eclipse.emf.ecore;bundle-version="2.7.0",
+ x5model;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

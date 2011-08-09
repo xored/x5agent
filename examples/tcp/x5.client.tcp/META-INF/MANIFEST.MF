@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Client endpoint of TCP transport for X5 Agent
+Bundle-SymbolicName: x5.client.tcp
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.xored.x5.client.tcp.internal.TcpTransportPlugin
+Bundle-Vendor: xored software, Inc.
+Require-Bundle: org.eclipse.core.runtime,
+ x5agent;bundle-version="1.0.0",
+ x5.shared.tcp;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
