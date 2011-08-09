@@ -27,7 +27,6 @@ import com.xored.x5.X5Request;
 import com.xored.x5.X5Response;
 import com.xored.x5agent.core.X5Agent;
 import com.xored.x5agent.core.X5Transport;
-import com.xored.x5agent.core.X5TransportFatalException;
 
 public class HttpTransport implements X5Transport {
 
@@ -37,7 +36,7 @@ public class HttpTransport implements X5Transport {
 	public void initialize(Map<String, String> parameters) {
 		this.baseUrl = parameters.get("url");
 		if (baseUrl == null)
-			throw new X5TransportFatalException("URL is not specified");
+			throw new IllegalArgumentException("URL is not specified");
 	}
 
 	@Override

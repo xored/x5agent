@@ -1,5 +1,6 @@
 package com.xored.x5agent.core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -80,9 +81,14 @@ class X5MessageQueue {
 									retry = response == null
 											|| (response instanceof X5FactResponse && ((X5FactResponse) response)
 													.getStatus() == DeliveryStatus.RETRY);
-								} catch (Exception e) {
+								} catch (IOException e) {
 									X5Agent.Instance.logError(e);
 									retry = true;
+								} catch (Exception e) {
+									X5Agent.Instance.logError(e);
+									retry = false;
+									X5Agent.Instance.logInfo("Not accepted: "
+											+ fact.getId());
 								}
 								if (retry && !transport.isDisposed()) {
 									add(fact);
@@ -110,22 +116,18 @@ class X5MessageQueue {
 		}
 
 		private X5Transport getTransport() {
-			if (transport == null) {
+			if (transport == null && !disposed.get()) {
 				synchronized (this) {
-					if (transport == null) {
+					if (transport == null && !disposed.get()) {
 						try {
-							X5Agent.Instance
-									.logInfo("Create new transport instance");
 							transport = descriptor.create();
+							X5Agent.Instance.logInfo("Transport created");
 							if (transport == null)
-								throw new X5TransportFatalException(
+								throw new NullPointerException(
 										"Transport is not specified");
-							X5Agent.Instance.logInfo("Init created transport");
 							transport.initialize(descriptor.parameters());
-						} catch (X5TransportFatalException e) {
-							X5Agent.Instance.logError(e);
-							dispose();
-						} catch (Exception e) {
+							X5Agent.Instance.logInfo("Transport initialized");
+						} catch (IOException e) {
 							X5Agent.Instance.logError(e);
 							if (transport != null) {
 								try {
@@ -138,6 +140,9 @@ class X5MessageQueue {
 									transport = null;
 								}
 							}
+						} catch (Exception e) {
+							X5Agent.Instance.logError(e);
+							dispose();
 						}
 					}
 
@@ -146,20 +151,16 @@ class X5MessageQueue {
 			return transport;
 		}
 
-		private X5Response send(X5Fact message) {
+		private X5Response send(X5Fact message) throws IOException {
 			if (!disposed.get()) {
-				try {
+				X5Transport t = getTransport();
+				if (t != null) {
 					X5Agent.Instance
 							.logInfo("Send message: " + message.getId());
-					X5Transport t = getTransport();
-					if (t != null) {
-						X5Response res = t.send(message);
-						X5Agent.Instance.logInfo("Got response: "
-								+ message.getId());
-						return res;
-					}
-				} catch (Exception e) {
-					X5Agent.Instance.logError(e);
+					X5Response res = t.send(message);
+					X5Agent.Instance
+							.logInfo("Got response: " + message.getId());
+					return res;
 				}
 			}
 			return null;
