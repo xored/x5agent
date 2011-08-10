@@ -51,7 +51,15 @@ public class X5FactToOldJsonFormatConverter {
 			o.add("body", toJson((EclipseStatus) body));
 			o.addProperty("schema", "sherlok.eclipse_status");
 		}
-		o.add("refs", toJson(fact.getReferences()));
+		JsonObject refs = new JsonObject();
+		for (Entry<String, String> entry : fact.getReferences()) {
+			if ("sherlock.eclipse_info".equals(entry.getKey())) {
+				refs.addProperty("sherlok.eclipse_info", entry.getValue());
+			} else {
+				refs.addProperty(entry.getKey(), entry.getValue());
+			}
+		}
+		o.add("refs", refs);
 		return o;
 	}
 
@@ -140,10 +148,11 @@ public class X5FactToOldJsonFormatConverter {
 		o.addProperty("message", status.getMessage());
 		o.addProperty("code", status.getCode());
 		o.addProperty("severity", status.getSeverity());
-		// TODO o.addProperty("featureGuess", status.getFeatureGuess());
+		o.add("featureGuess", new JsonArray());
 		o.addProperty("plugin", status.getPlugin());
+		o.addProperty("pluginVersion", status.getPluginVersion());
 		o.addProperty("thread", status.getThreadName());
-		// TODO o.addProperty("children", null);
+		o.add("children", new JsonArray());
 		JavaException e = status.getException();
 		if (e != null)
 			o.add("exception", toJson(e));
