@@ -75,20 +75,24 @@ class X5MessageQueue {
 						pool.execute(new Runnable() {
 							@Override
 							public void run() {
-								boolean retry = true;
+								boolean retry = false;
 								try {
 									X5Response response = transport.send(fact);
-									retry = response == null
-											|| (response instanceof X5FactResponse && ((X5FactResponse) response)
-													.getStatus() == DeliveryStatus.RETRY);
+									if (response == null) {
+										retry = true;
+									} else if (response instanceof X5FactResponse) {
+										X5FactResponse factResponse = (X5FactResponse) response;
+										DeliveryStatus status = factResponse
+												.getStatus();
+										X5Agent.Instance.logInfo("Status="
+												+ status + ": " + fact.getId());
+										retry = status == DeliveryStatus.RETRY;
+									}
 								} catch (IOException e) {
 									X5Agent.Instance.logError(e);
 									retry = true;
 								} catch (Exception e) {
 									X5Agent.Instance.logError(e);
-									retry = false;
-									X5Agent.Instance.logInfo("Not accepted: "
-											+ fact.getId());
 								}
 								if (retry && !transport.isDisposed()) {
 									add(fact);
