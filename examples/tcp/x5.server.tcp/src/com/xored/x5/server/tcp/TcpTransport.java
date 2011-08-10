@@ -20,6 +20,7 @@ public class TcpTransport implements X5Transport {
 	@Override
 	public void initialize(Map<String, String> parameters,
 			X5RequestHandler handler) {
+		this.handler = handler;
 		if (!parameters.containsKey(PORT_KEY)) {
 			throw new IllegalArgumentException("Port is not specified");
 		}
@@ -42,9 +43,10 @@ public class TcpTransport implements X5Transport {
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Cannot open server socket", e);
 		}
-		
-		//No need to store this thread:
-		// once transport is disposed, socket will be closed and thread will die with IOException
+
+		// No need to store this thread:
+		// once transport is disposed, socket will be closed and thread will die
+		// with IOException
 		new ListenerThread().start();
 	}
 
@@ -89,7 +91,7 @@ public class TcpTransport implements X5Transport {
 			} catch (IOException e) {
 				try {
 					client.close();
-				} catch(IOException e2) {
+				} catch (IOException e2) {
 				}
 			}
 		}
