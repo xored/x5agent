@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IStatus;
 
 import com.xored.sherlock.core.SherlockCore;
+import com.xored.sherlock.core.model.sherlock.EclipseStatus;
 
 public class EclipseLogEventProvider extends StatusEventProvider implements
 		ILogListener {
@@ -17,7 +18,9 @@ public class EclipseLogEventProvider extends StatusEventProvider implements
 
 	@Override
 	public void logging(IStatus status, String plugin) {
-		notifyListeners(SherlockCore.convert(status));
+		EclipseStatus eStatus = SherlockCore.convert(status);
+		eStatus.setThreadName(Thread.currentThread().getName());
+		notifyListeners(eStatus);
 	}
 
 	@Override
