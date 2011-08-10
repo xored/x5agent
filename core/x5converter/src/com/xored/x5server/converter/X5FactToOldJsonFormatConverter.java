@@ -148,7 +148,7 @@ public class X5FactToOldJsonFormatConverter {
 		o.addProperty("message", status.getMessage());
 		o.addProperty("code", status.getCode());
 		o.addProperty("severity", status.getSeverity());
-		o.add("featureGuess", new JsonArray());
+		o.add("featureGuess", toJson(status.getFeatureGuess()));
 		o.addProperty("plugin", status.getPlugin());
 		o.addProperty("pluginVersion", status.getPluginVersion());
 		o.addProperty("thread", status.getThreadName());
@@ -163,6 +163,7 @@ public class X5FactToOldJsonFormatConverter {
 		JsonObject o = new JsonObject();
 		o.addProperty("message", t.getMessage());
 		o.addProperty("class", t.getClassName());
+		o.addProperty("className", t.getClassName());
 		JavaException cause = t.getCause();
 		if (cause != null)
 			o.add("cause", toJson(cause));
