@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            name="X5"
+            id="com.xored.x5agent.ui.example.commands.category">
+      </category>
+      <command
+            name="X5"
+            categoryId="com.xored.x5agent.ui.example.commands.category"
+            id="com.xored.x5agent.ui.example.commands.createLogEntry">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            commandId="com.xored.x5agent.ui.example.commands.createLogEntry"
+            class="com.xored.x5agent.ui.example.handlers.create.log.X5CreateLogEntry">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               label="Create Error log event"
+               id="com.xored.x5agent.ui.example.menus.sampleMenu">
+            <command
+                  commandId="com.xored.x5agent.ui.example.commands.createLogEntry"
+                  icon="icons/error_tsk.gif"
+                  id="com.xored.x5agent.ui.example.menus.createLogEntry">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="com.xored.x5agent.ui.example.toolbars.sampleToolbar"
+               label="X5">
+            <command
+                  commandId="com.xored.x5agent.ui.example.commands.createLogEntry"
+                  icon="icons/error_tsk.gif"
+                  tooltip="Create Error log event"
+                  id="com.xored.x5agent.ui.example.toolbars.createLogEntry">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+
+</plugin>
