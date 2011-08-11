@@ -1,0 +1,22 @@
+This is a sample transport for X5 agent and transport which communicates by transferring messages serialized with binary EMF serialization via TCP sockets. 
+
+To use this transport, do the following:
+	1. Import all projects into eclipse
+Server side:
+	2. Export x5.server.tcp and x5.shared.tcp as JAR file
+	3. Put this JAR file into <x5_server>/fantom-1.0.59/lib/java/ext/
+	4. Put tcp.properties file into <x5_server/x5expert/transports/ directory (modify port number if necessary)
+Client side:
+	5. Include x5.client.tcp plugin into your eclipse installation/launch configuration
+	6. Add dependency to x5.client.tcp bundle into MANIFEST.MF of the plugin defining X5 stream (com.xored.x5agent.core.tests by default)
+	7. In stream configuration of plugin.xml provide the following transport configuration instead of existing one: (adjust port & host according to server side config):
+	         
+         <transport
+               class="com.xored.x5.client.tcp.BinaryTcpTransport">
+            <parameter
+                  name="port"
+                  value="9494" />
+            <parameter
+            	  name="host"
+            	  value="localhost" />
+         </transport>
