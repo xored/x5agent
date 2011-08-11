@@ -1,6 +1,9 @@
-This is a sample transport for X5 agent and transport which communicates by transferring messages serialized with binary EMF serialization via TCP sockets. 
+This is a sample transport for X5 agent and transport which communicates by transferring messages serialized with binary EMF serialization via TCP sockets. The source organized in three projects:
+* x5.client.tcp -- client side transport endpoint
+* x5.server.tcp -- server-side endpoint
+* x5.shared.tcp -- the code which can be shared between client and server
 
-To use this transport, do the following:
+To use this transport:
 	1. Import all projects into eclipse
 Server side:
 	2. Export x5.server.tcp and x5.shared.tcp as JAR file

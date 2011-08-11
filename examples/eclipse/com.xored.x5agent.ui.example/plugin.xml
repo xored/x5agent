@@ -9,7 +9,7 @@
             id="com.xored.x5agent.ui.example.commands.category">
       </category>
       <command
-            name="X5"
+            name="Create Error log entry"
             categoryId="com.xored.x5agent.ui.example.commands.category"
             id="com.xored.x5agent.ui.example.commands.createLogEntry">
       </command>
@@ -26,7 +26,7 @@
       <menuContribution
             locationURI="menu:org.eclipse.ui.main.menu?after=additions">
          <menu
-               label="Create Error log event"
+               label="X5"
                id="com.xored.x5agent.ui.example.menus.sampleMenu">
             <command
                   commandId="com.xored.x5agent.ui.example.commands.createLogEntry"
